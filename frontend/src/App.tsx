@@ -2,6 +2,7 @@ import { Cloud } from 'lucide-react'
 import SearchBar from './components/SearchBar'
 import CurrentWeatherCard from './components/CurrentWeather'
 import MusicSuggestionCard from './components/MusicSuggestionCard'
+import OutfitRecommendation from './components/OutfitRecommendation'
 import ForecastList from './components/ForecastList'
 import LoadingSkeleton from './components/LoadingSkeleton'
 import ErrorAlert from './components/ErrorAlert'
@@ -50,6 +51,16 @@ export default function App() {
             </div>
             <div className="animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
               <MusicSuggestionCard weatherCode={data.current.weather_code} temperature={data.current.temperature_2m} />
+            </div>
+            <div className="animate-fade-in-up" style={{ animationDelay: '0.15s' }}>
+              <OutfitRecommendation
+                temperature={data.current.temperature_2m}
+                feelsLike={data.current.apparent_temperature}
+                humidity={data.current.relative_humidity_2m}
+                windSpeed={data.current.wind_speed_10m}
+                uvIndex={data.current.uv_index}
+                weatherCode={data.current.weather_code}
+              />
             </div>
             <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
               <ForecastList daily={data.daily} hourly={data.hourly} />

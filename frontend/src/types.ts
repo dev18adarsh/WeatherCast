@@ -31,8 +31,12 @@ export interface DailyForecast {
 export interface HourlyForecast {
   time: string[]
   temperature_2m: number[]
+  relative_humidity_2m: number[]
+  apparent_temperature: number[]
   precipitation_probability: number[]
   weather_code: number[]
+  wind_speed_10m: number[]
+  uv_index: number[]
 }
 
 export interface WeatherResponse {

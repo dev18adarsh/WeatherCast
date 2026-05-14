@@ -19,8 +19,12 @@ export default function ForecastList({ daily, hourly }: Props) {
     hoursByDay.push({
       time: indices.map((i) => hourly.time[i]),
       temperature_2m: indices.map((i) => hourly.temperature_2m[i]),
+      relative_humidity_2m: indices.map((i) => hourly.relative_humidity_2m[i]),
+      apparent_temperature: indices.map((i) => hourly.apparent_temperature[i]),
       precipitation_probability: indices.map((i) => hourly.precipitation_probability[i]),
       weather_code: indices.map((i) => hourly.weather_code[i]),
+      wind_speed_10m: indices.map((i) => hourly.wind_speed_10m[i]),
+      uv_index: indices.map((i) => hourly.uv_index[i]),
     })
   }
 

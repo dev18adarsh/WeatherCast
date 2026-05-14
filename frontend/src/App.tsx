@@ -1,5 +1,5 @@
 import { lazy, Suspense, useRef, useState } from 'react'
-import { Cloud, Globe } from 'lucide-react'
+import { Cloud, Globe, BarChart3 } from 'lucide-react'
 import SearchBar from './components/SearchBar'
 import CurrentWeatherCard from './components/CurrentWeather'
 import MusicSuggestionCard from './components/MusicSuggestionCard'
@@ -17,6 +17,7 @@ import { getMusicSuggestion } from './utils/musicSuggestions'
 import WeatherAssistant from './components/assistant/WeatherAssistant'
 import ShareButton from './components/share/ShareButton'
 import ShareModal from './components/share/ShareModal'
+import AnalyticsDashboard from './components/analytics/AnalyticsDashboard'
 import type { GeocodingResult } from './types'
 import type { GlobeHandle } from './components/WeatherGlobe'
 import type { CityWeather } from './data/worldCities'
@@ -40,6 +41,7 @@ export default function App() {
   const [showGlobe, setShowGlobe] = useState(false)
   const [showAssistant, setShowAssistant] = useState(false)
   const [showShare, setShowShare] = useState(false)
+  const [showAnalytics, setShowAnalytics] = useState(false)
 
   function handleSelect(loc: GeocodingResult) {
     fetchWeather(loc.latitude, loc.longitude, `${loc.name}, ${loc.country}`)
@@ -74,6 +76,20 @@ export default function App() {
             </h1>
             <p className="text-[10px] text-slate-500 tracking-wider uppercase -mt-0.5">Made by Adarsh</p>
           </div>
+          {data && !showGlobe && (
+            <button
+              onClick={() => setShowAnalytics((v) => !v)}
+              className={`p-2 rounded-xl transition-all duration-300 ${
+                showAnalytics
+                  ? 'bg-green-500/20 text-green-400 shadow-lg shadow-green-500/20'
+                  : 'text-slate-400 hover:text-white hover:bg-white/10'
+              }`}
+              title={showAnalytics ? 'Close analytics' : 'Weather Analytics'}
+              aria-label={showAnalytics ? 'Close analytics' : 'Open weather analytics'}
+            >
+              <BarChart3 className="w-5 h-5" aria-hidden="true" />
+            </button>
+          )}
           <button
             onClick={() => setShowGlobe((v) => !v)}
             className={`p-2 rounded-xl transition-all duration-300 ${
@@ -100,6 +116,14 @@ export default function App() {
           <main className="max-w-3xl mx-auto px-4 py-6 space-y-6 flex-1">
             <SearchBar onSelect={handleSelect} />
 
+            {showAnalytics && data && (
+              <div className="animate-fade-in-up">
+                <AnalyticsDashboard data={data} />
+              </div>
+            )}
+
+            {!showAnalytics && (
+            <>
             {error && <ErrorAlert message={error} />}
 
             {loading && <LoadingSkeleton />}
@@ -161,6 +185,8 @@ export default function App() {
                   <ForecastList daily={data.daily} hourly={data.hourly} />
                 </div>
               </>
+            )}
+            </>
             )}
           </main>
 

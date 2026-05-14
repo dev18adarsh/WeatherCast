@@ -7,6 +7,7 @@ import LoadingSkeleton from './components/LoadingSkeleton'
 import ErrorAlert from './components/ErrorAlert'
 import EmptyState from './components/EmptyState'
 import { useWeather } from './hooks/useWeather'
+import WeatherBackground from './components/WeatherBackground'
 import type { GeocodingResult } from './types'
 
 export default function App() {
@@ -19,7 +20,8 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-900">
+    <div className="min-h-screen bg-slate-900/50 relative">
+      {data && <WeatherBackground weatherCode={data.current.weather_code} />}
       <header className="border-b border-slate-800">
         <div className="max-w-3xl mx-auto px-4 py-4 flex items-center gap-2">
           <Cloud className="w-6 h-6 text-blue-400" />

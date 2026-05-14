@@ -18,3 +18,52 @@ body {
   background: #475569;
   border-radius: 3px;
 }
+
+@keyframes rain-fall {
+  0% { transform: translateY(-10vh) rotate(15deg); opacity: 0; }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.6; }
+  100% { transform: translateY(110vh) rotate(15deg); opacity: 0; }
+}
+
+@keyframes snow-fall {
+  0% { transform: translateY(-5vh) translateX(0); opacity: 0; }
+  10% { opacity: 0.8; }
+  90% { opacity: 0.8; }
+  100% { transform: translateY(105vh) translateX(40px); opacity: 0; }
+}
+
+@keyframes sun-pulse {
+  0%, 100% { box-shadow: 0 0 60px 20px rgba(251, 191, 36, 0.4); }
+  50% { box-shadow: 0 0 100px 40px rgba(251, 191, 36, 0.6); }
+}
+
+@keyframes sun-ray-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes cloud-drift {
+  0% { transform: translateX(-20vw); opacity: 0; }
+  10% { opacity: 0.7; }
+  90% { opacity: 0.7; }
+  100% { transform: translateX(120vw); opacity: 0; }
+}
+
+@keyframes fog-drift {
+  0% { transform: translateX(-10%); opacity: 0; }
+  20% { opacity: 0.3; }
+  80% { opacity: 0.3; }
+  100% { transform: translateX(110%); opacity: 0; }
+}
+
+@keyframes lightning-flash {
+  0%, 92%, 96%, 100% { opacity: 0; }
+  94% { opacity: 0.9; }
+  98% { opacity: 0.5; }
+}
+
+@keyframes thunder-rumble {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}

@@ -3,6 +3,7 @@ import SearchBar from './components/SearchBar'
 import CurrentWeatherCard from './components/CurrentWeather'
 import MusicSuggestionCard from './components/MusicSuggestionCard'
 import OutfitRecommendation from './components/OutfitRecommendation'
+import ActivitySuggestions from './components/ActivitySuggestions'
 import ForecastList from './components/ForecastList'
 import LoadingSkeleton from './components/LoadingSkeleton'
 import ErrorAlert from './components/ErrorAlert'
@@ -16,6 +17,15 @@ export default function App() {
 
   function handleSelect(loc: GeocodingResult) {
     fetchWeather(loc.latitude, loc.longitude, `${loc.name}, ${loc.country}`)
+  }
+
+  function getCurrentRainProb(): number {
+    if (!data) return 0
+    const now = new Date()
+    const currentHour = now.getHours()
+    const idx = data.hourly.time.findIndex((t) => new Date(t).getHours() === currentHour)
+    if (idx === -1) return 0
+    return data.hourly.precipitation_probability[idx] ?? 0
   }
 
   return (
@@ -60,6 +70,16 @@ export default function App() {
                 windSpeed={data.current.wind_speed_10m}
                 uvIndex={data.current.uv_index}
                 weatherCode={data.current.weather_code}
+              />
+            </div>
+            <div className="animate-fade-in-up" style={{ animationDelay: '0.18s' }}>
+              <ActivitySuggestions
+                temperature={data.current.temperature_2m}
+                humidity={data.current.relative_humidity_2m}
+                windSpeed={data.current.wind_speed_10m}
+                uvIndex={data.current.uv_index}
+                weatherCode={data.current.weather_code}
+                rainProbability={getCurrentRainProb()}
               />
             </div>
             <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>

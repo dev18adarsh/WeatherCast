@@ -13,7 +13,10 @@ import EmptyState from './components/EmptyState'
 import { useWeather } from './hooks/useWeather'
 import WeatherBackground from './components/WeatherBackground'
 import AssistantButton from './components/assistant/AssistantButton'
+import { getMusicSuggestion } from './utils/musicSuggestions'
 import WeatherAssistant from './components/assistant/WeatherAssistant'
+import ShareButton from './components/share/ShareButton'
+import ShareModal from './components/share/ShareModal'
 import type { GeocodingResult } from './types'
 import type { GlobeHandle } from './components/WeatherGlobe'
 import type { CityWeather } from './data/worldCities'
@@ -36,6 +39,7 @@ export default function App() {
   const globeRef = useRef<GlobeHandle>(null)
   const [showGlobe, setShowGlobe] = useState(false)
   const [showAssistant, setShowAssistant] = useState(false)
+  const [showShare, setShowShare] = useState(false)
 
   function handleSelect(loc: GeocodingResult) {
     fetchWeather(loc.latitude, loc.longitude, `${loc.name}, ${loc.country}`)
@@ -105,7 +109,14 @@ export default function App() {
             {!loading && data && (
               <>
                 <div className="animate-fade-in-up">
-                  <CurrentWeatherCard data={data.current} locationName={data.locationName} />
+                  <div className="relative">
+                    <CurrentWeatherCard data={data.current} locationName={data.locationName} />
+                    {data && (
+                      <div className="absolute top-4 right-4 z-10">
+                        <ShareButton onClick={() => setShowShare(true)} />
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div className="animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
                   <MusicSuggestionCard weatherCode={data.current.weather_code} temperature={data.current.temperature_2m} />
@@ -167,6 +178,14 @@ export default function App() {
 
       {showAssistant && (
         <WeatherAssistant data={data} />
+      )}
+
+      {showShare && data && (
+        <ShareModal
+          data={data}
+          musicMood={getMusicSuggestion(data.current.weather_code, data.current.temperature_2m).mood}
+          onClose={() => setShowShare(false)}
+        />
       )}
     </div>
   )

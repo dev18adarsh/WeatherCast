@@ -1,8 +1,9 @@
-import { memo, useState } from 'react'
+import { memo, lazy, Suspense, useState } from 'react'
 import { ChevronDown, ChevronUp, Droplets, Wind } from 'lucide-react'
 import { getDayName, formatTemp, getTempColor, getEmoji } from '../utils/weatherCodes'
-import WeatherChart from './WeatherChart'
 import type { HourlyForecast } from '../types'
+
+const WeatherChart = lazy(() => import('./WeatherChart'))
 
 interface Props {
   dayIndex: number
@@ -64,7 +65,9 @@ const ForecastDay = memo(function ForecastDay({
       </button>
       {expanded && hourly && (
         <div className="px-4 pb-4 border-t border-white/5 pt-4 animate-fade-in">
-          <WeatherChart hourly={hourly} />
+          <Suspense fallback={<div className="h-[200px] flex items-center justify-center"><div className="w-5 h-5 border-2 border-blue-400 border-t-transparent rounded-full animate-spin" /></div>}>
+            <WeatherChart hourly={hourly} />
+          </Suspense>
         </div>
       )}
     </div>

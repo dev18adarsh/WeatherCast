@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 
 export function Raindrops() {
   const drops = useMemo(() =>
-    Array.from({ length: 100 }, (_, i) => ({
+    Array.from({ length: 60 }, (_, i) => ({
       id: i,
       left: Math.random() * 100,
       delay: Math.random() * 2,
@@ -33,7 +33,7 @@ export function Raindrops() {
 
 export function RainSplashes() {
   const splashes = useMemo(() =>
-    Array.from({ length: 20 }, (_, i) => ({
+    Array.from({ length: 12 }, (_, i) => ({
       id: i,
       left: Math.random() * 100,
       delay: Math.random() * 4,
@@ -124,7 +124,7 @@ export function Mist() {
 
 export function Snowflakes() {
   const flakes = useMemo(() =>
-    Array.from({ length: 80 }, (_, i) => ({
+    Array.from({ length: 50 }, (_, i) => ({
       id: i,
       left: Math.random() * 100,
       delay: Math.random() * 6,
@@ -237,7 +237,7 @@ export function SunEffect() {
 
 export function DustParticles() {
   const particles = useMemo(() =>
-    Array.from({ length: 25 }, (_, i) => ({
+    Array.from({ length: 15 }, (_, i) => ({
       id: i,
       left: Math.random() * 100,
       top: 30 + Math.random() * 50,
@@ -320,7 +320,7 @@ export function Birds() {
 
 export function Clouds() {
   const clouds = useMemo(() =>
-    Array.from({ length: 8 }, (_, i) => ({
+    Array.from({ length: 6 }, (_, i) => ({
       id: i,
       top: 2 + Math.random() * 25,
       delay: Math.random() * 20,
@@ -360,7 +360,7 @@ export function Clouds() {
 
 export function WindStreaks() {
   const streaks = useMemo(() =>
-    Array.from({ length: 10 }, (_, i) => ({
+    Array.from({ length: 6 }, (_, i) => ({
       id: i,
       top: 15 + Math.random() * 65,
       delay: Math.random() * 6,
@@ -438,7 +438,7 @@ export function Fog() {
 
 export function FogWisps() {
   const wisps = useMemo(() =>
-    Array.from({ length: 8 }, (_, i) => ({
+    Array.from({ length: 5 }, (_, i) => ({
       id: i,
       left: Math.random() * 100,
       top: 20 + Math.random() * 50,
@@ -525,7 +525,7 @@ export function Thunderstorm() {
 
 export function StormDebris() {
   const debris = useMemo(() =>
-    Array.from({ length: 10 }, (_, i) => ({
+    Array.from({ length: 6 }, (_, i) => ({
       id: i,
       top: 20 + Math.random() * 60,
       delay: Math.random() * 4,
@@ -555,7 +555,7 @@ export function StormDebris() {
 
 export function AmbientStars() {
   const stars = useMemo(() =>
-    Array.from({ length: 40 }, (_, i) => ({
+    Array.from({ length: 25 }, (_, i) => ({
       id: i,
       top: Math.random() * 45,
       left: Math.random() * 100,

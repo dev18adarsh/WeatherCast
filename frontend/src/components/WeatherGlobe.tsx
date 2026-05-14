@@ -6,6 +6,34 @@ import type { WebGLRenderer, Scene } from 'three'
 import { WORLD_CITIES, type CityWeather } from '../data/worldCities'
 import { X, Loader2 } from 'lucide-react'
 
+const CACHE_KEY = 'globeCityWeather'
+const CACHE_TTL = 5 * 60 * 1000
+const CONCURRENCY = 6
+
+function getCachedCities(): CityWeather[] | null {
+  try {
+    const raw = sessionStorage.getItem(CACHE_KEY)
+    if (!raw) return null
+    const { data, ts } = JSON.parse(raw)
+    if (Date.now() - ts > CACHE_TTL) { sessionStorage.removeItem(CACHE_KEY); return null }
+    return data
+  } catch { return null }
+}
+
+function setCachedCities(data: CityWeather[]) {
+  try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ data, ts: Date.now() })) } catch { /* quota exceeded */ }
+}
+
+async function fetchWithConcurrency<T>(items: T[], fn: (item: T) => Promise<CityWeather | null>): Promise<CityWeather[]> {
+  const results: (CityWeather | null)[] = []
+  for (let i = 0; i < items.length; i += CONCURRENCY) {
+    const batch = items.slice(i, i + CONCURRENCY)
+    const batchResults = await Promise.all(batch.map(fn))
+    results.push(...batchResults)
+  }
+  return results.filter((r): r is CityWeather => r !== null)
+}
+
 interface Props {
   onCitySelect?: (city: CityWeather) => void
 }
@@ -87,27 +115,34 @@ export default forwardRef<GlobeHandle, Props>(function WeatherGlobe({ onCitySele
     let cancelled = false
 
     async function fetchAll() {
-      const results = await Promise.all(
-        WORLD_CITIES.map(async (city) => {
-          try {
-            const url = `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lng}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&timezone=auto`
-            const res = await fetch(url)
-            const data = await res.json()
-            return {
-              ...city,
-              temp: Math.round(data.current.temperature_2m),
-              weatherCode: data.current.weather_code,
-              humidity: data.current.relative_humidity_2m,
-              wind: data.current.wind_speed_10m,
-              time: data.current.time,
-            } as CityWeather
-          } catch {
-            return null
-          }
-        }),
-      )
+      const cached = getCachedCities()
+      if (cached) {
+        setCities(cached)
+        setLoading(false)
+        return
+      }
+
+      const results = await fetchWithConcurrency(WORLD_CITIES, async (city) => {
+        try {
+          const url = `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lng}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&timezone=auto`
+          const res = await fetch(url)
+          const data = await res.json()
+          return {
+            ...city,
+            temp: Math.round(data.current.temperature_2m),
+            weatherCode: data.current.weather_code,
+            humidity: data.current.relative_humidity_2m,
+            wind: data.current.wind_speed_10m,
+            time: data.current.time,
+          } as CityWeather
+        } catch {
+          return null
+        }
+      })
+
       if (!cancelled) {
-        setCities(results.filter((r): r is CityWeather => r !== null))
+        setCachedCities(results)
+        setCities(results)
         setLoading(false)
       }
     }

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { lazy, Suspense, useRef, useState } from 'react'
 import { Cloud, Globe } from 'lucide-react'
 import SearchBar from './components/SearchBar'
 import CurrentWeatherCard from './components/CurrentWeather'
@@ -6,7 +6,6 @@ import MusicSuggestionCard from './components/MusicSuggestionCard'
 import OutfitRecommendation from './components/OutfitRecommendation'
 import ActivitySuggestions from './components/ActivitySuggestions'
 import TravelReadiness from './components/TravelReadiness'
-import WeatherGlobe from './components/WeatherGlobe'
 import ForecastList from './components/ForecastList'
 import LoadingSkeleton from './components/LoadingSkeleton'
 import ErrorAlert from './components/ErrorAlert'
@@ -16,6 +15,19 @@ import WeatherBackground from './components/WeatherBackground'
 import type { GeocodingResult } from './types'
 import type { GlobeHandle } from './components/WeatherGlobe'
 import type { CityWeather } from './data/worldCities'
+
+const WeatherGlobe = lazy(() => import('./components/WeatherGlobe'))
+
+function GlobeFallback() {
+  return (
+    <div className="flex-1 flex items-center justify-center bg-slate-900 min-h-0">
+      <div className="text-center space-y-3">
+        <div className="w-8 h-8 border-2 border-blue-400 border-t-transparent rounded-full animate-spin mx-auto" />
+        <p className="text-sm text-slate-400">Loading 3D globe...</p>
+      </div>
+    </div>
+  )
+}
 
 export default function App() {
   const { data, loading, error, fetchWeather } = useWeather()
@@ -71,9 +83,11 @@ export default function App() {
       </header>
 
       {showGlobe ? (
-        <div className="flex-1 relative min-h-0 bg-slate-900">
-          <WeatherGlobe ref={globeRef} onCitySelect={handleGlobeCitySelect} />
-        </div>
+        <Suspense fallback={<GlobeFallback />}>
+          <div className="flex-1 relative min-h-0 bg-slate-900">
+            <WeatherGlobe ref={globeRef} onCitySelect={handleGlobeCitySelect} />
+          </div>
+        </Suspense>
       ) : (
         <>
           <main className="max-w-3xl mx-auto px-4 py-6 space-y-6 flex-1">

@@ -553,6 +553,258 @@ export function StormDebris() {
   )
 }
 
+export function MoonGlow({ phase = 0 }: { phase?: number }) {
+  const moonSize = 80 + (phase % 3) * 20
+  const glowIntensity = 0.3 + (phase % 4) * 0.1
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div
+        className="absolute"
+        style={{
+          top: '6%',
+          right: '10%',
+          width: `${moonSize}px`,
+          height: `${moonSize}px`,
+        }}
+      >
+        <div
+          className="w-full h-full rounded-full"
+          style={{
+            background: 'radial-gradient(circle at 40% 35%, #f5f3e7, #e8e0cc 40%, #d4c9a8)',
+            boxShadow: `0 0 ${moonSize * 0.5}px rgba(245,243,231,${glowIntensity * 0.4}),
+                        0 0 ${moonSize}px rgba(245,243,231,${glowIntensity * 0.2}),
+                        0 0 ${moonSize * 2}px rgba(245,243,231,${glowIntensity * 0.1})`,
+          }}
+        />
+        <div
+          className="absolute rounded-full bg-gray-400/20"
+          style={{
+            top: '15%',
+            left: '20%',
+            width: '20%',
+            height: '20%',
+          }}
+        />
+        <div
+          className="absolute rounded-full bg-gray-400/15"
+          style={{
+            top: '45%',
+            left: '50%',
+            width: '15%',
+            height: '15%',
+          }}
+        />
+        <div
+          className="absolute rounded-full bg-gray-400/10"
+          style={{
+            top: '60%',
+            left: '15%',
+            width: '12%',
+            height: '12%',
+          }}
+        />
+        <div className="absolute inset-0 rounded-full" style={{
+          background: 'radial-gradient(circle at 40% 35%, transparent 50%, rgba(245,243,231,0.03) 70%, transparent 72%)',
+        }} />
+      </div>
+
+      <div
+        className="absolute rounded-full pointer-events-none"
+        style={{
+          top: 'calc(6% + 40px)',
+          right: 'calc(10% + 40px)',
+          width: '300px',
+          height: '300px',
+          transform: 'translate(-30%, -30%)',
+          background: 'radial-gradient(circle, rgba(245,243,231,0.03), transparent 70%)',
+          filter: 'blur(30px)',
+        }}
+      />
+    </div>
+  )
+}
+
+export function ShootingStars() {
+  const stars = useMemo(() =>
+    Array.from({ length: 3 }, (_, i) => ({
+      id: i,
+      delay: 8 + i * 12,
+      duration: 0.8 + Math.random() * 0.6,
+      top: 5 + Math.random() * 20,
+      left: 60 + Math.random() * 35,
+      angle: -20 + Math.random() * -10,
+      length: 60 + Math.random() * 80,
+    })), [])
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {stars.map((s) => (
+        <div
+          key={s.id}
+          className="absolute"
+          style={{
+            top: `${s.top}%`,
+            left: `${s.left}%`,
+            width: `${s.length}px`,
+            height: '1.5px',
+            ['--angle' as string]: `${s.angle}deg`,
+            animation: `shooting-star ${s.duration}s ease-out ${s.delay}s infinite`,
+            background: 'linear-gradient(to right, rgba(255,255,255,0.8), rgba(255,255,255,0.3), transparent)',
+            filter: 'blur(0.5px)',
+          }}
+        >
+          <div
+            className="absolute right-0 w-3 h-3 rounded-full"
+            style={{
+              background: 'radial-gradient(circle, rgba(255,255,255,0.9), transparent)',
+              transform: 'translate(50%, -35%)',
+              filter: 'blur(1px)',
+            }}
+          />
+        </div>
+      ))}
+    </div>
+  )
+}
+
+export function AuroraBorealis() {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {[0, 1, 2].map((i) => (
+        <div
+          key={i}
+          className="absolute inset-x-0"
+          style={{
+            top: `${5 + i * 8}%`,
+            height: '30%',
+            animation: `aurora ${12 + i * 6}s ease-in-out ${i * 4}s infinite`,
+            background: `linear-gradient(90deg,
+              transparent 0%,
+              rgba(0,255,128,${0.02 + i * 0.01}) 15%,
+              rgba(0,200,255,${0.03 + i * 0.01}) 30%,
+              rgba(100,0,255,${0.02 + i * 0.01}) 50%,
+              rgba(0,200,255,${0.03 + i * 0.01}) 70%,
+              rgba(0,255,128,${0.02 + i * 0.01}) 85%,
+              transparent 100%
+            )`,
+            filter: `blur(${30 + i * 20}px)`,
+            transformOrigin: 'center center',
+          }}
+        />
+      ))}
+    </div>
+  )
+}
+
+export function SunsetGlow() {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div
+        className="absolute bottom-0 left-1/2 -translate-x-1/2"
+        style={{
+          width: '80%',
+          height: '50%',
+          background: 'radial-gradient(ellipse at 50% 100%, rgba(255,107,107,0.25) 0%, rgba(197,108,240,0.12) 40%, transparent 70%)',
+          filter: 'blur(40px)',
+        }}
+      />
+      <div
+        className="absolute bottom-[5%] left-1/2 -translate-x-1/2"
+        style={{
+          width: '40%',
+          height: '30%',
+          background: 'radial-gradient(ellipse at 50% 100%, rgba(255,200,100,0.3) 0%, transparent 60%)',
+          filter: 'blur(50px)',
+        }}
+      />
+      <div className="absolute bottom-0 left-0 right-0 h-[8%] bg-gradient-to-t from-orange-500/20 via-transparent to-transparent" />
+    </div>
+  )
+}
+
+export function EnhancedLightning() {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div
+        className="absolute inset-0"
+        style={{
+          animation: 'flash-overlay 3s ease-in-out infinite',
+          background: 'radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.15), transparent 60%)',
+        }}
+      />
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div key={i} style={{ position: 'absolute', inset: 0 }}>
+          <div
+            className="absolute"
+            style={{
+              width: '3px',
+              height: `${60 + Math.random() * 100}px`,
+              top: '3%',
+              left: `${10 + Math.random() * 80}%`,
+              animation: `lightning-flash ${3 + i * 1.5}s ease-in-out ${i * 0.8}s infinite`,
+              filter: 'blur(1px)',
+              boxShadow: '0 0 40px 20px rgba(255,255,255,0.3), 0 0 80px 40px rgba(200,200,255,0.1)',
+              transform: `rotate(${-10 + Math.random() * 20}deg)`,
+              background: 'linear-gradient(to bottom, #fff 20%, rgba(180,200,255,0.9), transparent)',
+            }}
+          >
+            {Array.from({ length: 3 + Math.floor(Math.random() * 3) }).map((_, j) => (
+              <div
+                key={j}
+                className="absolute"
+                style={{
+                  top: `${25 + j * 18}%`,
+                  left: j % 2 === 0 ? '100%' : 'auto',
+                  right: j % 2 === 1 ? '100%' : 'auto',
+                  width: `${15 + Math.random() * 30}px`,
+                  height: '1.5px',
+                  background: 'linear-gradient(to right, rgba(200,200,255,0.6), transparent)',
+                  transform: `rotate(${(Math.random() - 0.5) * 30}deg)`,
+                  filter: 'blur(0.5px)',
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+export function FogOverlay() {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div
+        className="absolute inset-0"
+        style={{
+          background: 'radial-gradient(ellipse at 50% 50%, rgba(148,163,184,0.04), transparent 60%)',
+          filter: 'blur(20px)',
+        }}
+      />
+      {[0, 1, 2, 3].map((i) => (
+        <div
+          key={i}
+          className="absolute inset-x-0"
+          style={{
+            top: `${10 + i * 22}%`,
+            height: `${35 + i * 10}%`,
+            animation: `fog-drift ${25 + i * 12}s ease-in-out ${i * 6}s infinite`,
+            background: `linear-gradient(90deg,
+              transparent 0%,
+              rgba(148,163,184,${0.02 + i * 0.01}) 20%,
+              rgba(148,163,184,${0.03 + i * 0.01}) 50%,
+              rgba(148,163,184,${0.02 + i * 0.01}) 80%,
+              transparent 100%
+            )`,
+            filter: `blur(${40 + i * 15}px)`,
+          }}
+        />
+      ))}
+    </div>
+  )
+}
+
 export function AmbientStars() {
   const stars = useMemo(() =>
     Array.from({ length: 25 }, (_, i) => ({

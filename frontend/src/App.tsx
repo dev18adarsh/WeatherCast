@@ -25,7 +25,7 @@ export default function App() {
       <header className="border-b border-slate-800">
         <div className="max-w-3xl mx-auto px-4 py-4 flex items-center gap-2">
           <Cloud className="w-6 h-6 text-blue-400" />
-          <h1 className="text-lg font-semibold">Weather Forecast</h1>
+          <h1 className="text-lg font-semibold">Kimi's WeatherInfo (Made by Adarsh)</h1>
         </div>
       </header>
 

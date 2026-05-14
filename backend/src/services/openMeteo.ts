@@ -1,7 +1,7 @@
 const BASE_URL = 'https://api.open-meteo.com/v1'
 
 export async function fetchGeocode(query: string) {
-  const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=5&language=en&format=json`
+  const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=8&language=en&format=json`
   const res = await fetch(url)
   if (!res.ok) throw new Error(`Geocoding API error: ${res.status}`)
   return res.json()

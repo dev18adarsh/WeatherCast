@@ -13,9 +13,10 @@ export function useGeocode(query: string) {
       setResults([])
       return
     }
+    const controller = new AbortController()
     setLoading(true)
     setError(null)
-    fetch(`/api/geocode?q=${encodeURIComponent(debouncedQuery)}`)
+    fetch(`/api/geocode?q=${encodeURIComponent(debouncedQuery)}`, { signal: controller.signal })
       .then((res) => {
         if (!res.ok) throw new Error('Failed to fetch')
         return res.json()
@@ -24,10 +25,12 @@ export function useGeocode(query: string) {
         setResults(data.results ?? [])
       })
       .catch((e) => {
+        if (e.name === 'AbortError') return
         setError(e.message)
         setResults([])
       })
       .finally(() => setLoading(false))
+    return () => controller.abort()
   }, [debouncedQuery])
 
   return { results, loading, error }

@@ -10,6 +10,7 @@ export default {
       animation: {
         'fade-in-up': 'fadeInUp 0.6s ease-out both',
         'fade-in': 'fadeIn 0.5s ease-out both',
+        'slide-up': 'slideUp 0.35s ease-out both',
         'glow-pulse': 'glowPulse 2s ease-in-out infinite',
         'float': 'float 6s ease-in-out infinite',
       },
@@ -21,6 +22,10 @@ export default {
         fadeIn: {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },
+        },
+        slideUp: {
+          '0%': { opacity: '0', transform: 'translateY(16px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
         },
         glowPulse: {
           '0%, 100%': { boxShadow: '0 0 20px rgba(59,130,246,0.3)' },

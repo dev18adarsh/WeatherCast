@@ -12,6 +12,8 @@ import ErrorAlert from './components/ErrorAlert'
 import EmptyState from './components/EmptyState'
 import { useWeather } from './hooks/useWeather'
 import WeatherBackground from './components/WeatherBackground'
+import AssistantButton from './components/assistant/AssistantButton'
+import WeatherAssistant from './components/assistant/WeatherAssistant'
 import type { GeocodingResult } from './types'
 import type { GlobeHandle } from './components/WeatherGlobe'
 import type { CityWeather } from './data/worldCities'
@@ -33,6 +35,7 @@ export default function App() {
   const { data, loading, error, fetchWeather } = useWeather()
   const globeRef = useRef<GlobeHandle>(null)
   const [showGlobe, setShowGlobe] = useState(false)
+  const [showAssistant, setShowAssistant] = useState(false)
 
   function handleSelect(loc: GeocodingResult) {
     fetchWeather(loc.latitude, loc.longitude, `${loc.name}, ${loc.country}`)
@@ -154,6 +157,16 @@ export default function App() {
             Made with <span className="text-red-400">&#9829;</span> by <span className="text-slate-300 font-medium">Adarsh Kumar Pollai</span>
           </footer>
         </>
+      )}
+
+      <AssistantButton
+        onClick={() => setShowAssistant((v) => !v)}
+        open={showAssistant}
+        hasData={!!data}
+      />
+
+      {showAssistant && (
+        <WeatherAssistant data={data} />
       )}
     </div>
   )

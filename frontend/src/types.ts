@@ -15,6 +15,7 @@ export interface CurrentWeather {
   weather_code: number
   wind_speed_10m: number
   uv_index: number
+  visibility: number
 }
 
 export interface DailyForecast {

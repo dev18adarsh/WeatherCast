@@ -19,7 +19,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const params = new URLSearchParams({
     latitude: latNum.toString(),
     longitude: lngNum.toString(),
-    current: 'temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,uv_index',
+    current: 'temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,uv_index,visibility',
     daily: 'weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,wind_speed_10m_max',
     hourly: 'temperature_2m,precipitation_probability,weather_code',
     timezone: 'auto',

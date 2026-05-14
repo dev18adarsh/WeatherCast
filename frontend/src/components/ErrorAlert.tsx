@@ -14,8 +14,8 @@ export default function ErrorAlert({ message }: Props) {
         <AlertCircle className="w-4 h-4 text-red-400" />
       </div>
       <p className="text-sm text-red-300 flex-1">{message}</p>
-      <button onClick={() => setDismissed(true)} className="shrink-0 hover:text-red-200 transition-colors">
-        <X className="w-4 h-4" />
+      <button onClick={() => setDismissed(true)} className="shrink-0 hover:text-red-200 transition-colors" aria-label="Dismiss error">
+        <X className="w-4 h-4" aria-hidden="true" />
       </button>
     </div>
   )

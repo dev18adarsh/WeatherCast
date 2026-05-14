@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { Wind, Droplets, Thermometer } from 'lucide-react'
 import type { CurrentWeather } from '../types'
 import { getWeatherCondition, formatTemp, getTempColor, getEmoji } from '../utils/weatherCodes'
@@ -7,7 +8,7 @@ interface Props {
   locationName: string
 }
 
-export default function CurrentWeatherCard({ data, locationName }: Props) {
+const CurrentWeatherCard = memo(function CurrentWeatherCard({ data, locationName }: Props) {
   const condition = getWeatherCondition(data.weather_code)
   const tempColor = getTempColor(data.temperature_2m)
 
@@ -35,8 +36,8 @@ export default function CurrentWeatherCard({ data, locationName }: Props) {
             </div>
             <p className="text-slate-400">Feels like {formatTemp(data.apparent_temperature)}</p>
           </div>
-          <div className="text-center animate-float">
-            <div className="text-6xl mb-2 drop-shadow-2xl">{getEmoji(data.weather_code)}</div>
+            <div className="text-center animate-float">
+            <div className="text-6xl mb-2 drop-shadow-2xl" role="img" aria-label={condition.label}>{getEmoji(data.weather_code)}</div>
             <p className="text-sm text-slate-300 font-medium">{condition.label}</p>
           </div>
         </div>
@@ -60,4 +61,6 @@ export default function CurrentWeatherCard({ data, locationName }: Props) {
       </div>
     </div>
   )
-}
+})
+
+export default CurrentWeatherCard

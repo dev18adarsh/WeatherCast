@@ -63,8 +63,9 @@ export default function App() {
                 : 'text-slate-400 hover:text-white hover:bg-white/10'
             }`}
             title={showGlobe ? 'Close globe' : '3D Earth Globe'}
+            aria-label={showGlobe ? 'Close 3D globe view' : 'Open 3D globe view'}
           >
-            <Globe className="w-5 h-5" />
+            <Globe className="w-5 h-5" aria-hidden="true" />
           </button>
         </div>
       </header>

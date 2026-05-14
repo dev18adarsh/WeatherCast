@@ -16,6 +16,10 @@ export function getWeatherCondition(code: number): WeatherCondition {
   return { label: 'Thunderstorm', icon: 'CloudLightning' }
 }
 
+export function getWeatherDescription(code: number): string {
+  return getWeatherCondition(code).label
+}
+
 export function getDayName(dateStr: string): string {
   const date = new Date(dateStr + 'T12:00:00')
   const today = new Date()

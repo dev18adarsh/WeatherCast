@@ -1,4 +1,5 @@
-import { Music, ExternalLink, Headphones, Sparkles } from 'lucide-react'
+import { memo } from 'react'
+import { Music, ExternalLink, Sparkles } from 'lucide-react'
 import { getMusicSuggestion, getSpotifySearchUrl } from '../utils/musicSuggestions'
 
 interface Props {
@@ -6,7 +7,7 @@ interface Props {
   temperature: number
 }
 
-export default function MusicSuggestionCard({ weatherCode, temperature }: Props) {
+const MusicSuggestionCard = memo(function MusicSuggestionCard({ weatherCode, temperature }: Props) {
   const s = getMusicSuggestion(weatherCode, temperature)
 
   return (
@@ -27,7 +28,7 @@ export default function MusicSuggestionCard({ weatherCode, temperature }: Props)
               <h3 className="text-lg font-bold text-white flex items-center gap-2">{s.mood}</h3>
             </div>
           </div>
-          <span className="text-3xl drop-shadow-xl animate-float">{s.emoji}</span>
+          <span className="text-3xl drop-shadow-xl animate-float" role="img" aria-label={s.mood}>{s.emoji}</span>
         </div>
 
         <p className="text-sm text-white/70 leading-relaxed">{s.vibe}</p>
@@ -50,4 +51,6 @@ export default function MusicSuggestionCard({ weatherCode, temperature }: Props)
       </div>
     </div>
   )
-}
+})
+
+export default MusicSuggestionCard

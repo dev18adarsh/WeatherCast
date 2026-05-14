@@ -130,18 +130,23 @@ export default function SearchBar({ onSelect }: Props) {
               <Loader2 className="w-5 h-5 text-blue-400 animate-spin" />
             </div>
           ) : query ? (
-            <button
-              onClick={clear}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-all duration-300 z-10 p-1 rounded-lg hover:bg-white/10"
-            >
-              <X className="w-4 h-4" />
-            </button>
+              <button
+                onClick={clear}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-all duration-300 z-10 p-1 rounded-lg hover:bg-white/10"
+                aria-label="Clear search"
+              >
+                <X className="w-4 h-4" aria-hidden="true" />
+              </button>
           ) : null}
         </div>
       </div>
 
       {showRecents && (
-        <ul className="absolute z-50 mt-3 w-full bg-slate-800/90 backdrop-blur-2xl rounded-2xl overflow-hidden shadow-2xl shadow-black/30 border border-white/10 animate-fade-in-up">
+        <ul
+          onMouseEnter={() => { mouseOnList.current = true }}
+          onMouseLeave={() => { mouseOnList.current = false }}
+          className="absolute z-50 mt-3 w-full bg-slate-800/90 backdrop-blur-2xl rounded-2xl overflow-hidden shadow-2xl shadow-black/30 border border-white/10 animate-fade-in-up"
+        >
           <li className="px-5 py-3 flex items-center gap-2 text-[10px] text-slate-500 uppercase tracking-[0.15em] font-semibold border-b border-white/5">
             <History className="w-3 h-3" />
             Recent
@@ -176,7 +181,11 @@ export default function SearchBar({ onSelect }: Props) {
       )}
 
       {showResults && (
-        <ul className="absolute z-50 mt-3 w-full bg-slate-800/90 backdrop-blur-2xl rounded-2xl overflow-hidden shadow-2xl shadow-black/30 border border-white/10 animate-fade-in-up">
+        <ul
+          onMouseEnter={() => { mouseOnList.current = true }}
+          onMouseLeave={() => { mouseOnList.current = false }}
+          className="absolute z-50 mt-3 w-full bg-slate-800/90 backdrop-blur-2xl rounded-2xl overflow-hidden shadow-2xl shadow-black/30 border border-white/10 animate-fade-in-up"
+        >
           <li className="px-5 py-3 flex items-center gap-2 text-[10px] text-slate-500 uppercase tracking-[0.15em] font-semibold border-b border-white/5">
             <MapPin className="w-3 h-3" />
             Results ({results.length})

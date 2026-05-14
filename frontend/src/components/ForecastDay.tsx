@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { memo, useState } from 'react'
 import { ChevronDown, ChevronUp, Droplets, Wind } from 'lucide-react'
 import { getDayName, formatTemp, getTempColor, getEmoji } from '../utils/weatherCodes'
 import WeatherChart from './WeatherChart'
@@ -16,7 +16,7 @@ interface Props {
   hourly: HourlyForecast | null
 }
 
-export default function ForecastDay({
+const ForecastDay = memo(function ForecastDay({
   dayIndex, date, maxTemp, minTemp, weatherCode,
   precip, precipProb, wind, hourly,
 }: Props) {
@@ -69,4 +69,6 @@ export default function ForecastDay({
       )}
     </div>
   )
-}
+})
+
+export default ForecastDay

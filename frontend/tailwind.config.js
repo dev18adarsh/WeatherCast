@@ -8,8 +8,8 @@ export default {
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
       animation: {
-        'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
-        'fade-in': 'fadeIn 0.5s ease-out forwards',
+        'fade-in-up': 'fadeInUp 0.6s ease-out both',
+        'fade-in': 'fadeIn 0.5s ease-out both',
         'glow-pulse': 'glowPulse 2s ease-in-out infinite',
         'float': 'float 6s ease-in-out infinite',
       },

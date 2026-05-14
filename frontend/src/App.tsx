@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Cloud } from 'lucide-react'
 import SearchBar from './components/SearchBar'
 import CurrentWeatherCard from './components/CurrentWeather'
@@ -18,7 +17,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen relative">
+    <div className="min-h-screen bg-slate-900 relative">
       {data && <WeatherBackground weatherCode={data.current.weather_code} />}
       <header className="sticky top-0 z-40 glass border-b border-white/5 backdrop-blur-xl">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">

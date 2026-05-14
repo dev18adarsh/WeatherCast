@@ -1,4 +1,4 @@
-import { Search, MapPin, Loader2, X, Clock } from 'lucide-react'
+import { Search, MapPin, Loader2, X, Clock, History } from 'lucide-react'
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { useGeocode } from '../hooks/useGeocode'
 import type { GeocodingResult } from '../types'
@@ -46,6 +46,7 @@ export default function SearchBar({ onSelect }: Props) {
   const { results, loading } = useGeocode(query)
   const ref = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const mouseOnList = useRef(false)
 
   const showRecents = open && query.length === 0 && recents.length > 0
   const showResults = open && query.length >= 2
@@ -61,7 +62,7 @@ export default function SearchBar({ onSelect }: Props) {
   }, [results, query.length])
 
   useEffect(() => {
-    if (!focused && query.length === 0) setOpen(false)
+    if (!focused && query.length === 0 && !mouseOnList.current) setOpen(false)
   }, [focused, query.length])
 
   useEffect(() => {
@@ -108,11 +109,11 @@ export default function SearchBar({ onSelect }: Props) {
   }, [open, activeIndex, totalItems, items, select])
 
   return (
-    <div ref={ref} className="relative w-full max-w-xl mx-auto animate-fade-in-up">
+    <div ref={ref} className="relative w-full max-w-xl mx-auto">
       <div className="relative group">
-        <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl opacity-0 group-focus-within:opacity-100 blur transition duration-500" />
-        <div className="relative flex items-center">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5 z-10" />
+        <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl opacity-0 group-focus-within:opacity-100 blur-xl transition-all duration-700" />
+        <div className="relative flex items-center bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl shadow-black/20 group-focus-within:border-blue-400/40 transition-all duration-500">
+          <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5 z-10 transition-colors duration-300 group-focus-within:text-blue-400" />
           <input
             ref={inputRef}
             type="text"
@@ -122,14 +123,16 @@ export default function SearchBar({ onSelect }: Props) {
             onBlur={() => setFocused(false)}
             onKeyDown={handleKeyDown}
             placeholder="Search for a city..."
-            className="w-full pl-12 pr-12 py-3.5 glass rounded-xl text-white placeholder-slate-400 focus:outline-none transition"
+            className="w-full pl-14 pr-14 py-4 bg-transparent rounded-2xl text-white placeholder-slate-500 focus:outline-none text-[15px] tracking-wide"
           />
           {loading ? (
-            <Loader2 className="absolute right-4 top-1/2 -translate-y-1/2 text-blue-400 w-5 h-5 animate-spin z-10" />
+            <div className="absolute right-5 top-1/2 -translate-y-1/2 z-10">
+              <Loader2 className="w-5 h-5 text-blue-400 animate-spin" />
+            </div>
           ) : query ? (
             <button
               onClick={clear}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors z-10"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-all duration-300 z-10 p-1 rounded-lg hover:bg-white/10"
             >
               <X className="w-4 h-4" />
             </button>
@@ -138,49 +141,84 @@ export default function SearchBar({ onSelect }: Props) {
       </div>
 
       {showRecents && (
-        <ul className="absolute z-50 mt-2 w-full glass rounded-xl overflow-hidden shadow-2xl border border-white/10 animate-fade-in">
-          <li className="px-4 py-2 text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Recent</li>
-          {recents.map((loc, idx) => (
-            <li
-              key={loc.id}
-              onClick={() => select(loc)}
-              className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition-colors border-b border-white/5 last:border-0 ${
-                idx === activeIndex ? 'bg-white/10' : 'hover:bg-white/5'
-              }`}
-            >
-              <Clock className="w-4 h-4 text-slate-500 shrink-0" />
-              <div>
-                <div className="text-sm font-medium">{loc.name}</div>
-                <div className="text-xs text-slate-400">{loc.admin1 ? `${loc.admin1}, ` : ''}{loc.country}</div>
-              </div>
-            </li>
-          ))}
+        <ul className="absolute z-50 mt-3 w-full bg-slate-800/90 backdrop-blur-2xl rounded-2xl overflow-hidden shadow-2xl shadow-black/30 border border-white/10 animate-fade-in-up">
+          <li className="px-5 py-3 flex items-center gap-2 text-[10px] text-slate-500 uppercase tracking-[0.15em] font-semibold border-b border-white/5">
+            <History className="w-3 h-3" />
+            Recent
+          </li>
+          <div className="max-h-64 overflow-y-auto custom-scrollbar">
+            {recents.map((loc, idx) => (
+              <li
+                key={loc.id}
+                onMouseDown={(e) => { e.preventDefault(); select(loc) }}
+                className={`flex items-center gap-4 px-5 py-3.5 cursor-pointer transition-all duration-200 border-b border-white/[0.03] last:border-0 relative overflow-hidden ${
+                  idx === activeIndex
+                    ? 'bg-blue-500/15'
+                    : 'hover:bg-white/[0.06]'
+                }`}
+              >
+                <div className={`shrink-0 flex items-center justify-center w-8 h-8 rounded-xl transition-all duration-300 ${
+                  idx === activeIndex ? 'bg-blue-500/20 text-blue-300' : 'bg-white/5 text-slate-500'
+                }`}>
+                  <Clock className="w-4 h-4" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-sm font-medium text-white truncate">{loc.name}</div>
+                  <div className="text-[11px] text-slate-400 truncate">{loc.admin1 ? `${loc.admin1}, ` : ''}{loc.country}</div>
+                </div>
+                {idx === 0 && (
+                  <span className="ml-auto text-[9px] text-blue-400/60 uppercase tracking-wider font-medium shrink-0">Last</span>
+                )}
+              </li>
+            ))}
+          </div>
         </ul>
       )}
 
       {showResults && (
-        <ul className="absolute z-50 mt-2 w-full glass rounded-xl overflow-hidden shadow-2xl border border-white/10 animate-fade-in">
-          {results.map((loc, idx) => (
-            <li
-              key={loc.id}
-              onClick={() => select(loc)}
-              className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition-colors border-b border-white/5 last:border-0 ${
-                idx === activeIndex ? 'bg-white/10' : 'hover:bg-white/5'
-              }`}
-            >
-              <MapPin className="w-4 h-4 text-blue-400 shrink-0" />
-              <div>
-                <div className="text-sm font-medium">{highlightMatch(loc.name, query)}</div>
-                <div className="text-xs text-slate-400">{loc.admin1 ? `${loc.admin1}, ` : ''}{loc.country}</div>
-              </div>
-            </li>
-          ))}
+        <ul className="absolute z-50 mt-3 w-full bg-slate-800/90 backdrop-blur-2xl rounded-2xl overflow-hidden shadow-2xl shadow-black/30 border border-white/10 animate-fade-in-up">
+          <li className="px-5 py-3 flex items-center gap-2 text-[10px] text-slate-500 uppercase tracking-[0.15em] font-semibold border-b border-white/5">
+            <MapPin className="w-3 h-3" />
+            Results ({results.length})
+          </li>
+          <div className="max-h-64 overflow-y-auto custom-scrollbar">
+            {results.map((loc, idx) => (
+              <li
+                key={loc.id}
+                onMouseDown={(e) => { e.preventDefault(); select(loc) }}
+                className={`flex items-center gap-4 px-5 py-3.5 cursor-pointer transition-all duration-200 border-b border-white/[0.03] last:border-0 relative overflow-hidden ${
+                  idx === activeIndex
+                    ? 'bg-blue-500/15'
+                    : 'hover:bg-white/[0.06]'
+                }`}
+              >
+                <div className={`shrink-0 flex items-center justify-center w-8 h-8 rounded-xl transition-all duration-300 ${
+                  idx === activeIndex ? 'bg-blue-500/20 text-blue-300' : 'bg-white/5 text-blue-400'
+                }`}>
+                  <MapPin className="w-4 h-4" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-sm font-medium text-white truncate">{highlightMatch(loc.name, query)}</div>
+                  <div className="text-[11px] text-slate-400 truncate">{loc.admin1 ? `${loc.admin1}, ` : ''}{loc.country}</div>
+                </div>
+                <div className="ml-auto shrink-0 text-[10px] text-slate-600">
+                  {loc.latitude.toFixed(1)}°N
+                </div>
+              </li>
+            ))}
+          </div>
         </ul>
       )}
 
       {showNoResults && (
-        <div className="absolute z-50 mt-2 w-full glass rounded-xl overflow-hidden shadow-2xl border border-white/10 animate-fade-in px-4 py-6 text-center">
-          <p className="text-sm text-slate-400">No cities found for "<span className="text-slate-300">{query}</span>"</p>
+        <div className="absolute z-50 mt-3 w-full bg-slate-800/90 backdrop-blur-2xl rounded-2xl overflow-hidden shadow-2xl shadow-black/30 border border-white/10 animate-fade-in-up px-5 py-8 text-center">
+          <div className="w-10 h-10 mx-auto mb-3 rounded-2xl bg-white/5 flex items-center justify-center">
+            <Search className="w-5 h-5 text-slate-500" />
+          </div>
+          <p className="text-sm text-slate-400">
+            No cities found for "<span className="text-slate-300 font-medium">{query}</span>"
+          </p>
+          <p className="text-[11px] text-slate-600 mt-1.5">Try a different search term</p>
         </div>
       )}
     </div>

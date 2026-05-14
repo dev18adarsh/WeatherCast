@@ -1,20 +1,22 @@
 import { AlertCircle, X } from 'lucide-react'
+import { useState } from 'react'
 
 interface Props {
   message: string
-  onDismiss?: () => void
 }
 
-export default function ErrorAlert({ message, onDismiss }: Props) {
+export default function ErrorAlert({ message }: Props) {
+  const [dismissed, setDismissed] = useState(false)
+  if (dismissed) return null
   return (
-    <div className="flex items-start gap-3 bg-red-900/40 border border-red-800 rounded-xl p-4 text-red-200">
-      <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
-      <p className="text-sm flex-1">{message}</p>
-      {onDismiss && (
-        <button onClick={onDismiss} className="shrink-0 hover:text-red-100 transition-colors">
-          <X className="w-4 h-4" />
-        </button>
-      )}
+    <div className="flex items-start gap-3 glass border border-red-500/20 rounded-xl p-4 animate-fade-in">
+      <div className="p-1 rounded-lg bg-red-500/10">
+        <AlertCircle className="w-4 h-4 text-red-400" />
+      </div>
+      <p className="text-sm text-red-300 flex-1">{message}</p>
+      <button onClick={() => setDismissed(true)} className="shrink-0 hover:text-red-200 transition-colors">
+        <X className="w-4 h-4" />
+      </button>
     </div>
   )
 }

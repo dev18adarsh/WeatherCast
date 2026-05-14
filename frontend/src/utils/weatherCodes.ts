@@ -43,3 +43,31 @@ export function getWindDirection(speed: number): string {
   if (speed < 35) return 'Strong'
   return 'Very strong'
 }
+
+export function getTempColor(temp: number): string {
+  if (temp <= 0) return '#38bdf8'
+  if (temp <= 10) return '#60a5fa'
+  if (temp <= 20) return '#4ade80'
+  if (temp <= 25) return '#fbbf24'
+  if (temp <= 30) return '#fb923c'
+  return '#ef4444'
+}
+
+export function getTempGlow(temp: number): string {
+  if (temp <= 10) return 'rgba(96,165,250,0.3)'
+  if (temp <= 25) return 'rgba(251,191,36,0.3)'
+  return 'rgba(239,68,68,0.3)'
+}
+
+export function getEmoji(code: number): string {
+  if (code === 0) return '☀️'
+  if (code <= 2) return '⛅'
+  if (code === 3) return '☁️'
+  if (code <= 48) return '🌫️'
+  if (code <= 57) return '🌦️'
+  if (code <= 67) return '🌧️'
+  if (code <= 77) return '❄️'
+  if (code <= 82) return '🌦️'
+  if (code <= 86) return '🌨️'
+  return '⛈️'
+}

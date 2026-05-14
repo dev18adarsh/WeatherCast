@@ -12,27 +12,32 @@ import type { GeocodingResult } from './types'
 
 export default function App() {
   const { data, loading, error, fetchWeather } = useWeather()
-  const [selectedLoc, setSelectedLoc] = useState<GeocodingResult | null>(null)
 
   function handleSelect(loc: GeocodingResult) {
-    setSelectedLoc(loc)
     fetchWeather(loc.latitude, loc.longitude, `${loc.name}, ${loc.country}`)
   }
 
   return (
-    <div className="min-h-screen bg-slate-900/50 relative">
+    <div className="min-h-screen relative">
       {data && <WeatherBackground weatherCode={data.current.weather_code} />}
-      <header className="border-b border-slate-800">
-        <div className="max-w-3xl mx-auto px-4 py-4 flex items-center gap-2">
-          <Cloud className="w-6 h-6 text-blue-400" />
-          <h1 className="text-lg font-semibold">Kimi's WeatherInfo (Made by Adarsh)</h1>
+      <header className="sticky top-0 z-40 glass border-b border-white/5 backdrop-blur-xl">
+        <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
+          <div className="p-2 rounded-xl bg-gradient-to-br from-blue-500 to-purple-500 shadow-lg shadow-blue-500/25">
+            <Cloud className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <h1 className="text-base font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+              Kimi's WeatherInfo
+            </h1>
+            <p className="text-[10px] text-slate-500 tracking-wider uppercase -mt-0.5">Made by Adarsh</p>
+          </div>
         </div>
       </header>
 
       <main className="max-w-3xl mx-auto px-4 py-6 space-y-6">
         <SearchBar onSelect={handleSelect} />
 
-        {error && <ErrorAlert message={error} onDismiss={() => {}} />}
+        {error && <ErrorAlert message={error} />}
 
         {loading && <LoadingSkeleton />}
 
@@ -40,14 +45,18 @@ export default function App() {
 
         {!loading && data && (
           <>
-            <CurrentWeatherCard data={data.current} locationName={data.locationName} />
-            <ForecastList daily={data.daily} hourly={data.hourly} />
+            <div className="animate-fade-in-up">
+              <CurrentWeatherCard data={data.current} locationName={data.locationName} />
+            </div>
+            <div className="animate-fade-in-up" style={{ animationDelay: '0.15s' }}>
+              <ForecastList daily={data.daily} hourly={data.hourly} />
+            </div>
           </>
         )}
       </main>
 
-      <footer className="border-t border-slate-800 py-4 text-center text-sm text-slate-500">
-        Made by <span className="text-slate-300">Adarsh Kumar Pollai</span>
+      <footer className="glass border-t border-white/5 py-4 text-center text-xs text-slate-500">
+        Made with <span className="text-red-400">&#9829;</span> by <span className="text-slate-300 font-medium">Adarsh Kumar Pollai</span>
       </footer>
     </div>
   )

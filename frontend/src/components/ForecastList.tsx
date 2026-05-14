@@ -1,3 +1,4 @@
+import { CalendarDays } from 'lucide-react'
 import ForecastDay from './ForecastDay'
 import type { DailyForecast, HourlyForecast } from '../types'
 
@@ -24,8 +25,14 @@ export default function ForecastList({ daily, hourly }: Props) {
   }
 
   return (
-    <div className="space-y-2">
-      <h3 className="text-lg font-semibold mb-3">7-Day Forecast</h3>
+    <div className="space-y-2 animate-fade-in-up">
+      <div className="flex items-center gap-2 mb-4">
+        <div className="p-1.5 rounded-lg bg-blue-500/10">
+          <CalendarDays className="w-4 h-4 text-blue-400" />
+        </div>
+        <h3 className="text-base font-bold text-slate-200 tracking-wide uppercase">7-Day Forecast</h3>
+        <div className="flex-1 h-px bg-gradient-to-r from-white/10 to-transparent ml-2" />
+      </div>
       {daily.time.map((date, i) => (
         <ForecastDay
           key={date}

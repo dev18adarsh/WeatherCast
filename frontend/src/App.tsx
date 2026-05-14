@@ -43,6 +43,10 @@ export default function App() {
           </>
         )}
       </main>
+
+      <footer className="border-t border-slate-800 py-4 text-center text-sm text-slate-500">
+        Made by <span className="text-slate-300">Adarsh Kumar Pollai</span>
+      </footer>
     </div>
   )
 }

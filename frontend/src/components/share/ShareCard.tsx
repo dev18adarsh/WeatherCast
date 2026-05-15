@@ -94,7 +94,6 @@ export default function ShareCard({ data, themeId, musicMood }: Props) {
   const country = locationParts[1] || ''
   const now = new Date()
   const dateStr = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })
-  const appUrl = 'weathercast.app'
 
   return (
     <div

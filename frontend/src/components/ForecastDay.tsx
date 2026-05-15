@@ -24,10 +24,13 @@ const ForecastDay = memo(function ForecastDay({
   const [expanded, setExpanded] = useState(dayIndex === 0)
   const maxColor = getTempColor(maxTemp)
   const minColor = getTempColor(minTemp)
+  const isToday = dayIndex === 0
 
   return (
     <div
-      className="glass rounded-xl overflow-hidden transition-all duration-300 animate-fade-in-up"
+      className={`glass rounded-xl overflow-hidden transition-all duration-300 animate-fade-in-up hover:shadow-lg hover:shadow-black/20 ${
+        isToday ? 'ring-1 ring-blue-500/20' : ''
+      }`}
       style={{ animationDelay: `${dayIndex * 0.08}s` }}
     >
       <button
@@ -42,9 +45,9 @@ const ForecastDay = memo(function ForecastDay({
         <div className="flex-1">
           <div className="flex items-center justify-end gap-2">
             <span className="text-xs font-medium" style={{ color: minColor }}>{formatTemp(minTemp)}</span>
-            <div className="relative w-20 h-1.5 bg-white/10 rounded-full overflow-hidden">
+            <div className="relative w-20 sm:w-24 h-1.5 bg-white/10 rounded-full overflow-hidden">
               <div
-                className="absolute inset-0 rounded-full transition-all duration-500"
+                className="absolute inset-0 rounded-full transition-all duration-700"
                 style={{
                   background: `linear-gradient(to right, ${minColor}, ${maxColor})`,
                   width: `${Math.abs(maxTemp - minTemp) * 4 + 30}%`,
@@ -56,10 +59,10 @@ const ForecastDay = memo(function ForecastDay({
           </div>
         </div>
         <div className="hidden sm:flex items-center gap-3 text-xs text-slate-500 shrink-0">
-          <span className="flex items-center gap-1"><Droplets className="w-3 h-3 text-blue-400" />{precipProb}%</span>
-          <span className="flex items-center gap-1"><Wind className="w-3 h-3 text-purple-400" />{wind}</span>
+          <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-blue-500/10"><Droplets className="w-3 h-3 text-blue-400" />{precipProb}%</span>
+          <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-purple-500/10"><Wind className="w-3 h-3 text-purple-400" />{wind}</span>
         </div>
-        <div className="p-1 rounded-full bg-white/5">
+        <div className="p-1 rounded-full bg-white/5 hover:bg-white/10 transition-colors">
           {expanded ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
         </div>
       </button>

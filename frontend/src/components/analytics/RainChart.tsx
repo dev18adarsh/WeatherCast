@@ -1,4 +1,4 @@
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ReferenceLine } from 'recharts'
+import { ResponsiveContainer, BarChart, Bar, Cell, XAxis, YAxis, Tooltip, CartesianGrid, ReferenceLine } from 'recharts'
 import type { TrendPoint } from '../../utils/weatherAnalytics'
 
 interface Props {
@@ -20,13 +20,9 @@ export default function RainChart({ data }: Props) {
           formatter={(value: number) => [`${value}%`, 'Rain Probability']}
         />
         <ReferenceLine y={50} stroke="#475569" strokeDasharray="3 3" strokeWidth={1} />
-        <Bar
-          dataKey="value"
-          radius={[3, 3, 0, 0]}
-          maxBarSize={8}
-        >
+        <Bar dataKey="value" radius={[3, 3, 0, 0]} maxBarSize={8}>
           {chartData.map((entry, idx) => (
-            <rect key={idx} fill={entry.value > 70 ? '#ef4444' : entry.value > 40 ? '#f59e0b' : '#60a5fa'} />
+            <Cell key={idx} fill={entry.value > 70 ? '#ef4444' : entry.value > 40 ? '#f59e0b' : '#60a5fa'} />
           ))}
         </Bar>
       </BarChart>

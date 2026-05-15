@@ -141,7 +141,7 @@ export default function ShareModal({ data, musicMood, onClose }: Props) {
             </div>
 
             <p className="text-[10px] text-slate-600 text-center">
-              Card dimensions: 420×{560 + (data.daily ? 0 : 0)}px · 3x retina quality
+              Card dimensions: 420×560px · 3x retina quality
             </p>
           </div>
         </div>

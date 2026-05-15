@@ -33,6 +33,7 @@ export default function WeatherAssistant({ data }: Props) {
     if (data) {
       setQuickQuestions(getQuickQuestions(data))
       setInsights(generateAutoInsights(data))
+      setShowInsights(true)
     }
   }, [data])
 

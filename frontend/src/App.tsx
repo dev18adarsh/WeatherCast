@@ -27,8 +27,14 @@ const WeatherGlobe = lazy(() => import('./components/WeatherGlobe'))
 function GlobeFallback() {
   return (
     <div className="flex-1 flex items-center justify-center bg-slate-900 min-h-0">
-      <div className="text-center space-y-3">
-        <div className="w-8 h-8 border-2 border-blue-400 border-t-transparent rounded-full animate-spin mx-auto" />
+      <div className="text-center space-y-4">
+        <div className="relative mx-auto w-12 h-12">
+          <div className="absolute inset-0 border-2 border-blue-400/30 border-t-transparent rounded-full animate-spin" />
+          <div className="absolute inset-1 border-2 border-purple-400/20 border-b-transparent rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1s' }} />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Globe className="w-5 h-5 text-blue-400" />
+          </div>
+        </div>
         <p className="text-sm text-slate-400">Loading 3D globe...</p>
       </div>
     </div>
@@ -64,17 +70,22 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-900 relative flex flex-col">
+      <div className="fixed inset-0 pointer-events-none -z-20">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(59,130,246,0.08)_0%,_transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_rgba(139,92,246,0.06)_0%,_transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_rgba(6,182,212,0.04)_0%,_transparent_50%)]" />
+      </div>
       {data && !showGlobe && <WeatherBackground weatherCode={data.current.weather_code} />}
       <header className="sticky top-0 z-40 glass border-b border-white/5 backdrop-blur-xl shrink-0">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
-          <div className="p-2 rounded-xl bg-gradient-to-br from-blue-500 to-purple-500 shadow-lg shadow-blue-500/25">
+          <div className="p-2 rounded-xl bg-gradient-to-br from-blue-500 to-purple-500 shadow-lg shadow-blue-500/25 group-hover:scale-110 transition-transform">
             <Cloud className="w-5 h-5 text-white" />
           </div>
           <div className="flex-1">
-            <h1 className="text-base font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
-              Kimi's WeatherInfo
+            <h1 className="text-base font-bold bg-gradient-to-r from-white via-blue-200 to-slate-300 bg-clip-text text-transparent">
+              WeatherCast
             </h1>
-            <p className="text-[10px] text-slate-500 tracking-wider uppercase -mt-0.5">Made by Adarsh</p>
+            <p className="text-[10px] text-slate-500 tracking-wider uppercase -mt-0.5">Live Weather Dashboard</p>
           </div>
           {data && !showGlobe && (
             <button
@@ -135,11 +146,9 @@ export default function App() {
                 <div className="animate-fade-in-up">
                   <div className="relative">
                     <CurrentWeatherCard data={data.current} locationName={data.locationName} />
-                    {data && (
-                      <div className="absolute top-4 right-4 z-10">
-                        <ShareButton onClick={() => setShowShare(true)} />
-                      </div>
-                    )}
+                    <div className="absolute top-4 right-4 z-10">
+                      <ShareButton onClick={() => setShowShare(true)} />
+                    </div>
                   </div>
                 </div>
                 <div className="animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
@@ -191,7 +200,7 @@ export default function App() {
           </main>
 
           <footer className="glass border-t border-white/5 py-4 text-center text-xs text-slate-500 shrink-0">
-            Made with <span className="text-red-400">&#9829;</span> by <span className="text-slate-300 font-medium">Adarsh Kumar Pollai</span>
+            Crafted with <span className="text-red-400 animate-breathe inline-block">&#9829;</span> by <span className="text-slate-300 font-medium bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Adarsh Kumar Pollai</span>
           </footer>
         </>
       )}

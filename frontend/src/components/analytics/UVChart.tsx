@@ -1,4 +1,4 @@
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ReferenceLine } from 'recharts'
+import { ResponsiveContainer, BarChart, Bar, Cell, XAxis, YAxis, Tooltip, CartesianGrid, ReferenceLine } from 'recharts'
 import type { TrendPoint } from '../../utils/weatherAnalytics'
 
 interface Props {
@@ -33,7 +33,7 @@ export default function UVChart({ data }: Props) {
           <ReferenceLine y={8} stroke="#475569" strokeDasharray="3 3" strokeWidth={1} />
           <Bar dataKey="value" radius={[3, 3, 0, 0]} maxBarSize={8}>
             {chartData.map((entry, idx) => (
-              <rect key={idx} fill={getUVColor(entry.value)} />
+              <Cell key={idx} fill={getUVColor(entry.value)} />
             ))}
           </Bar>
         </BarChart>

@@ -25,13 +25,9 @@ export default function AssistantButton({ onClick, open, hasData }: Props) {
       )}
 
       {!open && !hasData && (
-        <span className="absolute -top-1 -right-1 w-3 h-3 bg-amber-400 rounded-full border-2 border-slate-900" />
-      )}
-
-      {!open && (
         <span className="absolute -top-1 -right-1 w-3 h-3">
           <span className="absolute inset-0 bg-amber-400 rounded-full animate-ping opacity-75" />
-          <span className="absolute inset-0 bg-amber-400 rounded-full" />
+          <span className="absolute inset-0 bg-amber-400 rounded-full border-2 border-slate-900" />
         </span>
       )}
     </button>

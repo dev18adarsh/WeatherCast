@@ -26,7 +26,7 @@ const CurrentWeatherCard = memo(function CurrentWeatherCard({ data, locationName
   const tempColor = getTempColor(data.temperature_2m)
 
   return (
-    <div className="glass-strong rounded-2xl p-6 md:p-8 animate-fade-in-up relative overflow-hidden group">
+    <div className="glass-strong rounded-2xl p-6 md:p-8 animate-fade-in-up relative overflow-hidden group card-shine">
       <div
         className="absolute -top-20 -right-20 w-64 h-64 rounded-full opacity-20 blur-3xl transition-all duration-1000 group-hover:scale-150"
         style={{ background: `radial-gradient(circle, ${tempColor}44, transparent)` }}

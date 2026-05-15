@@ -200,7 +200,7 @@ export default function ShareCard({ data, themeId, musicMood }: Props) {
             </div>
             <div>
               <div style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.1em', color: theme.secondaryText, opacity: 0.6 }}>Shared from</div>
-              <div style={{ fontSize: '11px', color: theme.textColor, fontWeight: 700 }}>WeatherCast</div>
+              <div style={{ fontSize: '11px', color: theme.textColor, fontWeight: 700 }}>WeatherCast 67</div>
             </div>
           </div>
         </div>

@@ -28,8 +28,8 @@ const ForecastDay = memo(function ForecastDay({
 
   return (
     <div
-      className={`glass rounded-xl overflow-hidden transition-all duration-300 animate-fade-in-up hover:shadow-lg hover:shadow-black/20 ${
-        isToday ? 'ring-1 ring-blue-500/20' : ''
+      className={`glass rounded-xl overflow-hidden transition-all duration-300 animate-fade-in-up hover:shadow-lg hover:shadow-black/20 card-shine ${
+        isToday ? 'ring-1 ring-blue-500/30' : ''
       }`}
       style={{ animationDelay: `${dayIndex * 0.08}s` }}
     >

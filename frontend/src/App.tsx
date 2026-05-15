@@ -1,5 +1,5 @@
 import { lazy, Suspense, useRef, useState } from 'react'
-import { Cloud, Globe, BarChart3 } from 'lucide-react'
+import { Cloud, Globe, BarChart3, Sparkles } from 'lucide-react'
 import SearchBar from './components/SearchBar'
 import CurrentWeatherCard from './components/CurrentWeather'
 import MusicSuggestionCard from './components/MusicSuggestionCard'
@@ -71,21 +71,36 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-900 relative flex flex-col">
       <div className="fixed inset-0 pointer-events-none -z-20">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(59,130,246,0.08)_0%,_transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_rgba(139,92,246,0.06)_0%,_transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_rgba(6,182,212,0.04)_0%,_transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(59,130,246,0.12)_0%,_transparent_60%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_rgba(139,92,246,0.08)_0%,_transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_rgba(6,182,212,0.06)_0%,_transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(168,85,247,0.03)_0%,_transparent_70%)]" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-[120px]" />
+        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-purple-500/5 rounded-full blur-[100px]" />
       </div>
       {data && !showGlobe && <WeatherBackground weatherCode={data.current.weather_code} />}
-      <header className="sticky top-0 z-40 glass border-b border-white/5 backdrop-blur-xl shrink-0">
+      <header className="sticky top-0 z-40 glass border-b border-white/[0.05] backdrop-blur-xl shrink-0 before:absolute before:inset-x-0 before:bottom-0 before:h-[1px] before:bg-gradient-to-r before:from-transparent before:via-blue-500/40 before:to-transparent">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
-          <div className="p-2 rounded-xl bg-gradient-to-br from-blue-500 to-purple-500 shadow-lg shadow-blue-500/25 group-hover:scale-110 transition-transform">
-            <Cloud className="w-5 h-5 text-white" />
+          <div className="relative shrink-0">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl blur-lg opacity-70 animate-glow-pulse" />
+            <div className="relative p-2 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg shadow-blue-500/25 transition-transform duration-300 hover:scale-110">
+              <Cloud className="w-5 h-5 text-white" />
+            </div>
           </div>
-          <div className="flex-1">
-            <h1 className="text-base font-bold bg-gradient-to-r from-white via-blue-200 to-slate-300 bg-clip-text text-transparent">
-              WeatherCast
-            </h1>
-            <p className="text-[10px] text-slate-500 tracking-wider uppercase -mt-0.5">Live Weather Dashboard</p>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2">
+              <h1 className="text-base font-extrabold bg-gradient-to-r from-white via-blue-200 to-purple-300 bg-clip-text text-transparent drop-shadow-sm tracking-tight">
+                WeatherCast 67
+              </h1>
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-60" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+              </span>
+            </div>
+            <p className="flex items-center gap-1 text-[10px] text-slate-500 tracking-wider uppercase -mt-0.5">
+              <Sparkles className="w-2.5 h-2.5 text-blue-400/60" />
+              Live Weather Dashboard
+            </p>
           </div>
           {data && !showGlobe && (
             <button
@@ -199,8 +214,8 @@ export default function App() {
             )}
           </main>
 
-          <footer className="glass border-t border-white/5 py-4 text-center text-xs text-slate-500 shrink-0">
-            Crafted with <span className="text-red-400 animate-breathe inline-block">&#9829;</span> by <span className="text-slate-300 font-medium bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Adarsh Kumar Pollai</span>
+          <footer className="glass border-t border-white/[0.05] py-4 text-center text-xs text-slate-500 shrink-0 relative before:absolute before:inset-x-0 before:top-0 before:h-[1px] before:bg-gradient-to-r before:from-transparent before:via-blue-500/30 before:to-transparent">
+            <span className="text-slate-600">Crafted with</span> <span className="text-red-400 animate-breathe inline-block">&#9829;</span> <span className="text-slate-600">by</span> <span className="font-semibold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">Adarsh Kumar Pollai</span>
           </footer>
         </>
       )}

@@ -1,10 +1,12 @@
-import { Search, MapPin, Loader2, X, Clock, History } from 'lucide-react'
+import { Search, MapPin, Loader2, X, Clock, History, Star } from 'lucide-react'
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { useGeocode } from '../hooks/useGeocode'
 import type { GeocodingResult } from '../types'
 
 interface Props {
   onSelect: (loc: GeocodingResult) => void
+  onFavorite?: (loc: GeocodingResult) => void
+  isFavorite?: (id: number) => boolean
 }
 
 const STORAGE_KEY = 'weatherRecentSearches'
@@ -37,7 +39,7 @@ function highlightMatch(text: string, query: string) {
   )
 }
 
-export default function SearchBar({ onSelect }: Props) {
+export default function SearchBar({ onSelect, onFavorite, isFavorite }: Props) {
   const [query, setQuery] = useState('')
   const [open, setOpen] = useState(false)
   const [focused, setFocused] = useState(false)
@@ -210,8 +212,22 @@ export default function SearchBar({ onSelect }: Props) {
                   <div className="text-sm font-medium text-white truncate">{highlightMatch(loc.name, query)}</div>
                   <div className="text-[11px] text-slate-400 truncate">{loc.admin1 ? `${loc.admin1}, ` : ''}{loc.country}</div>
                 </div>
-                <div className="ml-auto shrink-0 text-[10px] text-slate-600">
-                  {loc.latitude.toFixed(1)}°N
+                <div className="ml-auto flex items-center gap-2 shrink-0">
+                  {onFavorite && (
+                    <button
+                      onMouseDown={(e) => { e.stopPropagation(); e.preventDefault() }}
+                      onClick={(e) => { e.stopPropagation(); onFavorite(loc) }}
+                      className={`p-1 rounded-lg transition-all ${
+                        isFavorite?.(loc.id) ? 'text-yellow-400' : 'text-slate-600 hover:text-yellow-400'
+                      }`}
+                      aria-label={isFavorite?.(loc.id) ? 'Remove from favorites' : 'Add to favorites'}
+                    >
+                      <Star className="w-3.5 h-3.5" fill={isFavorite?.(loc.id) ? 'currentColor' : 'none'} />
+                    </button>
+                  )}
+                  <span className="text-[10px] text-slate-600">
+                    {loc.latitude.toFixed(1)}°N
+                  </span>
                 </div>
               </li>
             ))}

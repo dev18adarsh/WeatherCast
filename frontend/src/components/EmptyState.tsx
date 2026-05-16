@@ -1,8 +1,20 @@
 import { CloudSun, Search, MapPin } from 'lucide-react'
+import type { GeocodingResult } from '../types'
 
-const popularCities = ['New York', 'Tokyo', 'London', 'Paris', 'Dubai', 'Sydney']
+const POPULAR: { name: string; lat: number; lng: number; country: string }[] = [
+  { name: 'New York', lat: 40.7128, lng: -74.006, country: 'United States' },
+  { name: 'Tokyo', lat: 35.6762, lng: 139.6503, country: 'Japan' },
+  { name: 'London', lat: 51.5074, lng: -0.1278, country: 'United Kingdom' },
+  { name: 'Paris', lat: 48.8566, lng: 2.3522, country: 'France' },
+  { name: 'Dubai', lat: 25.2048, lng: 55.2708, country: 'UAE' },
+  { name: 'Sydney', lat: -33.8688, lng: 151.2093, country: 'Australia' },
+]
 
-export default function EmptyState() {
+interface Props {
+  onCityClick?: (loc: GeocodingResult) => void
+}
+
+export default function EmptyState({ onCityClick }: Props) {
   return (
     <div className="flex flex-col items-center justify-center py-24 animate-fade-in-up">
       <div className="relative mb-8">
@@ -20,14 +32,15 @@ export default function EmptyState() {
         7-day forecast, and AI-powered insights.
       </p>
       <div className="flex flex-wrap items-center justify-center gap-2 mt-6">
-        {popularCities.map((city) => (
-          <span
-            key={city}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.06] text-xs text-slate-400 hover:bg-white/[0.08] hover:text-slate-300 hover:border-white/[0.12] transition-all duration-200 cursor-default"
+        {POPULAR.map((city) => (
+          <button
+            key={city.name}
+            onClick={() => onCityClick?.({ id: 0, name: city.name, latitude: city.lat, longitude: city.lng, country: city.country, country_code: '', admin1: '' })}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.06] text-xs text-slate-400 hover:bg-white/[0.08] hover:text-slate-300 hover:border-white/[0.12] transition-all duration-200 cursor-pointer"
           >
             <MapPin className="w-2.5 h-2.5 text-blue-400/50" />
-            {city}
-          </span>
+            {city.name}
+          </button>
         ))}
       </div>
     </div>

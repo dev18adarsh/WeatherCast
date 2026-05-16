@@ -1,5 +1,5 @@
-import { lazy, Suspense, useRef, useState } from 'react'
-import { Cloud, Globe, BarChart3, Sparkles } from 'lucide-react'
+import { lazy, Suspense, useRef, useState, useEffect, useCallback } from 'react'
+import { Cloud, Globe, BarChart3, Sparkles, Thermometer, Star } from 'lucide-react'
 import SearchBar from './components/SearchBar'
 import CurrentWeatherCard from './components/CurrentWeather'
 import MusicSuggestionCard from './components/MusicSuggestionCard'
@@ -10,7 +10,12 @@ import ForecastList from './components/ForecastList'
 import LoadingSkeleton from './components/LoadingSkeleton'
 import ErrorAlert from './components/ErrorAlert'
 import EmptyState from './components/EmptyState'
+import FavoritesBar from './components/FavoritesBar'
 import { useWeather } from './hooks/useWeather'
+import { useGeolocation } from './hooks/useGeolocation'
+import { useFavorites } from './hooks/useFavorites'
+import { useKeyboardShortcut } from './hooks/useKeyboardShortcut'
+import { useUnit } from './context/UnitContext'
 import WeatherBackground from './components/WeatherBackground'
 import AssistantButton from './components/assistant/AssistantButton'
 import { getMusicSuggestion } from './utils/musicSuggestions'
@@ -44,20 +49,46 @@ function GlobeFallback() {
 export default function App() {
   const { data, loading, error, fetchWeather } = useWeather()
   const globeRef = useRef<GlobeHandle>(null)
+  const geo = useGeolocation()
+  const { favorites, add: addFavorite, remove: removeFavorite, isFavorite } = useFavorites()
+  const { unit, toggle: toggleUnit, formatTemp } = useUnit()
+
   const [showGlobe, setShowGlobe] = useState(false)
   const [showAssistant, setShowAssistant] = useState(false)
   const [showShare, setShowShare] = useState(false)
   const [showAnalytics, setShowAnalytics] = useState(false)
 
-  function handleSelect(loc: GeocodingResult) {
+  const geoFetched = useRef(false)
+
+  useEffect(() => {
+    if (geo.lat != null && geo.lng != null && !geoFetched.current) {
+      geoFetched.current = true
+      fetchWeather(geo.lat, geo.lng, 'My Location')
+    }
+  }, [geo.lat, geo.lng, fetchWeather])
+
+  useKeyboardShortcut('k', () => {
+    const input = document.querySelector<HTMLInputElement>('input[type="text"][placeholder*="Search"]')
+    input?.focus()
+  })
+
+  const handleSelect = useCallback((loc: GeocodingResult) => {
     fetchWeather(loc.latitude, loc.longitude, `${loc.name}, ${loc.country}`)
     globeRef.current?.flyTo(loc.latitude, loc.longitude)
-  }
+  }, [fetchWeather])
 
-  function handleGlobeCitySelect(city: CityWeather) {
+  const handleGlobeCitySelect = useCallback((city: CityWeather) => {
     fetchWeather(city.lat, city.lng, `${city.name}, ${city.country}`)
     setShowGlobe(false)
-  }
+  }, [fetchWeather])
+
+  const handleFavorite = useCallback((loc: GeocodingResult) => {
+    if (isFavorite(loc.id)) {
+      removeFavorite(loc.id)
+    } else {
+      addFavorite(loc)
+    }
+  }, [isFavorite, removeFavorite, addFavorite])
 
   function getCurrentRainProb(): number {
     if (!data) return 0
@@ -99,9 +130,18 @@ export default function App() {
             </div>
             <p className="flex items-center gap-1 text-[10px] text-slate-500 tracking-wider uppercase -mt-0.5">
               <Sparkles className="w-2.5 h-2.5 text-blue-400/60" />
-              Live Weather Dashboard
+              {unit === 'imperial' ? '°F · mph' : '°C · km/h'}
             </p>
           </div>
+          <button
+            onClick={toggleUnit}
+            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-all duration-300"
+            title={`Switch to ${unit === 'metric' ? '°F' : '°C'}`}
+            aria-label={`Switch to ${unit === 'metric' ? 'Fahrenheit' : 'Celsius'}`}
+          >
+            <Thermometer className="w-5 h-5" aria-hidden="true" />
+            <span className="text-[9px] font-bold block -mt-1">{unit === 'metric' ? '°C' : '°F'}</span>
+          </button>
           {data && !showGlobe && (
             <button
               onClick={() => setShowAnalytics((v) => !v)}
@@ -123,7 +163,7 @@ export default function App() {
                 ? 'bg-blue-500/20 text-blue-400 shadow-lg shadow-blue-500/20'
                 : 'text-slate-400 hover:text-white hover:bg-white/10'
             }`}
-            title={showGlobe ? 'Close globe' : '3D Earth Globe'}
+            title={showGlobe ? 'Close globe' : '3D Earth Globe (Ctrl+G)'}
             aria-label={showGlobe ? 'Close 3D globe view' : 'Open 3D globe view'}
           >
             <Globe className="w-5 h-5" aria-hidden="true" />
@@ -140,7 +180,22 @@ export default function App() {
       ) : (
         <>
           <main className="max-w-3xl mx-auto px-4 py-6 space-y-6 flex-1">
-            <SearchBar onSelect={handleSelect} />
+            <div className="space-y-3">
+              <SearchBar
+                onSelect={handleSelect}
+                onFavorite={handleFavorite}
+                isFavorite={isFavorite}
+              />
+              <div className="text-[10px] text-slate-600 text-center -mt-1">
+                Press <kbd className="px-1 py-0.5 rounded bg-white/10 text-slate-400 font-mono text-[9px]">Ctrl+K</kbd> to search
+              </div>
+              <FavoritesBar
+                favorites={favorites}
+                onSelect={handleSelect}
+                onRemove={removeFavorite}
+                isFavorite={isFavorite}
+              />
+            </div>
 
             {showAnalytics && data && (
               <div className="animate-fade-in-up">
@@ -154,14 +209,38 @@ export default function App() {
 
             {loading && <LoadingSkeleton />}
 
-            {!loading && !error && !data && <EmptyState />}
+            {!loading && !error && !data && <EmptyState onCityClick={handleSelect} />}
 
             {!loading && data && (
               <>
                 <div className="animate-fade-in-up">
                   <div className="relative">
                     <CurrentWeatherCard data={data.current} locationName={data.locationName} />
-                    <div className="absolute top-4 right-4 z-10">
+                    <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
+                      {data && (
+                        <button
+                          onClick={() => {
+                            const fakeLoc: GeocodingResult = {
+                              id: data.locationName.charCodeAt(0) * 1000 + Math.round(data.current.temperature_2m),
+                              name: data.locationName.split(',')[0],
+                              latitude: 0,
+                              longitude: 0,
+                              country: data.locationName.split(', ')[1] || '',
+                              country_code: '',
+                            }
+                            handleFavorite(fakeLoc)
+                          }}
+                          className={`p-2 rounded-xl transition-all duration-300 ${
+                            false
+                              ? 'text-yellow-400 bg-yellow-500/20'
+                              : 'text-slate-400 hover:text-yellow-400 hover:bg-white/10'
+                          }`}
+                          title="Add to favorites"
+                          aria-label="Add to favorites"
+                        >
+                          <Star className="w-4 h-4" />
+                        </button>
+                      )}
                       <ShareButton onClick={() => setShowShare(true)} />
                     </div>
                   </div>

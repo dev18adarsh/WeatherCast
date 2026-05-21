@@ -326,11 +326,3 @@ export default function App() {
     </div>
   )
 }
-data={data}
-          musicMood={getMusicSuggestion(data.current.weather_code, data.current.temperature_2m).mood}
-          onClose={() => setShowShare(false)}
-        />
-      )}
-    </div>
-  )
-}

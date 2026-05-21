@@ -110,6 +110,13 @@ export default function SearchBar({ onSelect, onFavorite, isFavorite }: Props) {
     }
   }, [open, activeIndex, totalItems, items, select])
 
+  const handleClearRecent = useCallback((e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    localStorage.removeItem(STORAGE_KEY)
+    setRecents([])
+  }, [])
+
   return (
     <div ref={ref} className="relative w-full max-w-xl mx-auto">
       <div className="relative group">
@@ -140,17 +147,10 @@ export default function SearchBar({ onSelect, onFavorite, isFavorite }: Props) {
                 <X className="w-4 h-4" aria-hidden="true" />
               </button>
           ) : null}
-        const handleClearRecent = useCallback((e: React.MouseEvent) => {
-          e.preventDefault()
-          e.stopPropagation()
-          localStorage.removeItem(STORAGE_KEY)
-          setRecents([])
-        }, [])
+        </div>
+      </div>
 
-        return (
-          <div ref={ref} className="relative w-full max-w-xl mx-auto">
-        ...
-            {showRecents && (
+      {showRecents && (
               <ul
                 onMouseEnter={() => { mouseOnList.current = true }}
                 onMouseLeave={() => { mouseOnList.current = false }}

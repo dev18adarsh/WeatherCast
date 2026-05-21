@@ -53,7 +53,7 @@ export interface HourlyForecast {
 }
 
 export interface WeatherResponse {
-  current: CurrentWeather & { air_quality?: AirQuality }
+  current: CurrentWeather
   daily: DailyForecast
   hourly: HourlyForecast
 }

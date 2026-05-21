@@ -8,16 +8,39 @@ export async function fetchGeocode(query: string) {
 }
 
 export async function fetchWeather(lat: number, lng: number) {
-  const params = new URLSearchParams({
+  const weatherParams = new URLSearchParams({
     latitude: lat.toString(),
     longitude: lng.toString(),
     current: 'temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,uv_index,visibility',
-    daily: 'weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,wind_speed_10m_max',
+    daily: 'weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,wind_speed_10m_max,sunrise,sunset',
     hourly: 'temperature_2m,relative_humidity_2m,apparent_temperature,precipitation_probability,weather_code,wind_speed_10m,uv_index',
     timezone: 'auto',
     forecast_days: '7',
   })
-  const res = await fetch(`${BASE_URL}/forecast?${params}`)
-  if (!res.ok) throw new Error(`Weather API error: ${res.status}`)
-  return res.json()
+
+  const aqParams = new URLSearchParams({
+    latitude: lat.toString(),
+    longitude: lng.toString(),
+    current: 'european_aqi,us_aqi,pm10,pm2_5',
+    timezone: 'auto',
+  })
+
+  const [weatherRes, aqRes] = await Promise.all([
+    fetch(`${BASE_URL}/forecast?${weatherParams}`),
+    fetch(`https://air-quality-api.open-meteo.com/v1/air-quality?${aqParams}`)
+  ])
+
+  if (!weatherRes.ok) throw new Error(`Weather API error: ${weatherRes.status}`)
+  if (!aqRes.ok) throw new Error(`Air Quality API error: ${aqRes.status}`)
+
+  const weatherData = await weatherRes.json()
+  const aqData = await aqRes.json()
+
+  return {
+    ...weatherData,
+    current: {
+      ...weatherData.current,
+      air_quality: aqData.current
+    }
+  }
 }

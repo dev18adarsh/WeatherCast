@@ -18,6 +18,15 @@ export interface CurrentWeather {
   apparent_temperature: number
   weather_code: number
   wind_speed_10m: number
+  uv_index: number
+  visibility: number
+}
+
+export interface AirQuality {
+  european_aqi: number
+  us_aqi: number
+  pm10: number
+  pm2_5: number
 }
 
 export interface DailyForecast {
@@ -28,6 +37,8 @@ export interface DailyForecast {
   precipitation_sum: number[]
   precipitation_probability_max: number[]
   wind_speed_10m_max: number[]
+  sunrise: string[]
+  sunset: string[]
 }
 
 export interface HourlyForecast {
@@ -42,7 +53,7 @@ export interface HourlyForecast {
 }
 
 export interface WeatherResponse {
-  current: CurrentWeather
+  current: CurrentWeather & { air_quality?: AirQuality }
   daily: DailyForecast
   hourly: HourlyForecast
 }

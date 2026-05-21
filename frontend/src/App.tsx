@@ -2,6 +2,7 @@ import { lazy, Suspense, useRef, useState, useEffect, useCallback } from 'react'
 import { Cloud, Globe, BarChart3, Sparkles, Thermometer, Star } from 'lucide-react'
 import SearchBar from './components/SearchBar'
 import CurrentWeatherCard from './components/CurrentWeather'
+import AirQualityCard from './components/AirQualityCard'
 import MusicSuggestionCard from './components/MusicSuggestionCard'
 import OutfitRecommendation from './components/OutfitRecommendation'
 import ActivitySuggestions from './components/ActivitySuggestions'
@@ -312,6 +313,14 @@ export default function App() {
       {showShare && data && (
         <ShareModal
           data={data}
+          musicMood={getMusicSuggestion(data.current.weather_code, data.current.temperature_2m).mood}
+          onClose={() => setShowShare(false)}
+        />
+      )}
+    </div>
+  )
+}
+data={data}
           musicMood={getMusicSuggestion(data.current.weather_code, data.current.temperature_2m).mood}
           onClose={() => setShowShare(false)}
         />

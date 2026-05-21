@@ -140,20 +140,35 @@ export default function SearchBar({ onSelect, onFavorite, isFavorite }: Props) {
                 <X className="w-4 h-4" aria-hidden="true" />
               </button>
           ) : null}
-        </div>
-      </div>
+        const handleClearRecent = useCallback((e: React.MouseEvent) => {
+          e.preventDefault()
+          e.stopPropagation()
+          localStorage.removeItem(STORAGE_KEY)
+          setRecents([])
+        }, [])
 
-      {showRecents && (
-        <ul
-          onMouseEnter={() => { mouseOnList.current = true }}
-          onMouseLeave={() => { mouseOnList.current = false }}
-          className="absolute z-50 mt-3 w-full bg-slate-800/90 backdrop-blur-2xl rounded-2xl overflow-hidden shadow-2xl shadow-black/30 border border-white/10 animate-fade-in-up"
-        >
-          <li className="px-5 py-3 flex items-center gap-2 text-[10px] text-slate-500 uppercase tracking-[0.15em] font-semibold border-b border-white/5">
-            <History className="w-3 h-3" />
-            Recent
-          </li>
-          <div className="max-h-64 overflow-y-auto custom-scrollbar">
+        return (
+          <div ref={ref} className="relative w-full max-w-xl mx-auto">
+        ...
+            {showRecents && (
+              <ul
+                onMouseEnter={() => { mouseOnList.current = true }}
+                onMouseLeave={() => { mouseOnList.current = false }}
+                className="absolute z-50 mt-3 w-full bg-slate-800/90 backdrop-blur-2xl rounded-2xl overflow-hidden shadow-2xl shadow-black/30 border border-white/10 animate-fade-in-up"
+              >
+                <li className="px-5 py-3 flex items-center justify-between gap-2 border-b border-white/5">
+                  <div className="flex items-center gap-2 text-[10px] text-slate-500 uppercase tracking-[0.15em] font-semibold">
+                    <History className="w-3 h-3" />
+                    Recent
+                  </div>
+                  <button
+                    onMouseDown={handleClearRecent}
+                    className="text-[9px] text-slate-500 hover:text-red-400 uppercase tracking-wider font-bold transition-colors"
+                  >
+                    Clear All
+                  </button>
+                </li>
+                <div className="max-h-64 overflow-y-auto custom-scrollbar">
             {recents.map((loc, idx) => (
               <li
                 key={loc.id}

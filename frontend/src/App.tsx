@@ -216,7 +216,12 @@ export default function App() {
               <>
                 <div className="animate-fade-in-up">
                   <div className="relative">
-                    <CurrentWeatherCard data={data.current} locationName={data.locationName} />
+                    <CurrentWeatherCard
+                      data={data.current}
+                      locationName={data.locationName}
+                      sunrise={data.daily.sunrise[0]}
+                      sunset={data.daily.sunset[0]}
+                    />
                     <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
                       {data && (
                         <button

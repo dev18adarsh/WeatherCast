@@ -119,6 +119,7 @@ export function computeComfort(temp: number, humidity: number): ComfortMetric {
 export function detectAnomalies(hourly: HourlyForecast, currentTemp: number, currentHumidity: number, currentWind: number): Anomaly[] {
   const anomalies: Anomaly[] = []
   const temps = hourly.temperature_2m
+  if (temps.length === 0) return anomalies
   const avg = temps.reduce((a, b) => a + b, 0) / temps.length
   const max = Math.max(...temps)
   const min = Math.min(...temps)

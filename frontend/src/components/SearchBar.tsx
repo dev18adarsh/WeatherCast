@@ -241,7 +241,7 @@ export default function SearchBar({ onSelect, onFavorite, isFavorite }: Props) {
                     </button>
                   )}
                   <span className="text-[10px] text-slate-600">
-                    {loc.latitude.toFixed(1)}°N
+                    {loc.latitude.toFixed(1)}{loc.latitude >= 0 ? '°N' : '°S'}
                   </span>
                 </div>
               </li>

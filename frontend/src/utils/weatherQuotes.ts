@@ -145,12 +145,12 @@ export function getWeatherQuote(weatherCode: number, temp: number): { text: stri
     }
   }
 
-  const available = valid.filter((_, i) => !usedQuotes.has(i))
+  const available = valid.filter((q) => !usedQuotes.has(quotes.indexOf(q)))
   const pool = available.length > 0 ? available : valid
+  if (available.length === 0) usedQuotes.clear()
   const idx = Math.floor(Math.random() * pool.length)
   const globalIdx = quotes.indexOf(pool[idx])
 
-  if (usedQuotes.size >= quotes.length) usedQuotes.clear()
   if (globalIdx >= 0) usedQuotes.add(globalIdx)
 
   return { text: pool[idx].text, author: pool[idx].author }

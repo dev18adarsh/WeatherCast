@@ -1,4 +1,4 @@
-import { AlertCircle, AlertTriangle, CloudRain, Wind, Sun } from 'lucide-react'
+import { AlertCircle, CloudRain, Wind, Sun } from 'lucide-react'
 import type { WeatherData } from '../types'
 
 interface Props {

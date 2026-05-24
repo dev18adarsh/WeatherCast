@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { getEmoji, getWeatherCondition, formatTemp } from '../../utils/weatherCodes'
 import { getWeatherQuote, getMusicMoodLabel } from '../../utils/weatherQuotes'
 import type { ThemeId, ThemePreset } from '../../utils/themePresets'
@@ -42,19 +43,19 @@ function DecorativeGrid() {
   )
 }
 
-function DecorativeStars() {
+function DecorativeStars({ positions }: { positions: Array<{ width: number; height: number; top: string; left: string; opacity: number }> }) {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {Array.from({ length: 15 }).map((_, i) => (
+      {positions.map((p, i) => (
         <div
           key={i}
           className="absolute rounded-full bg-white"
           style={{
-            width: 1 + Math.random() * 2,
-            height: 1 + Math.random() * 2,
-            top: `${Math.random() * 60}%`,
-            left: `${Math.random() * 90 + 5}%`,
-            opacity: 0.15 + Math.random() * 0.35,
+            width: p.width,
+            height: p.height,
+            top: p.top,
+            left: p.left,
+            opacity: p.opacity,
           }}
         />
       ))}
@@ -62,18 +63,18 @@ function DecorativeStars() {
   )
 }
 
-function DecorativeRainDrops() {
+function DecorativeRainDrops({ positions }: { positions: Array<{ height: string; left: string; top: string; opacity: number }> }) {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {Array.from({ length: 20 }).map((_, i) => (
+      {positions.map((p, i) => (
         <div
           key={i}
           className="absolute w-px"
           style={{
-            height: `${8 + Math.random() * 15}px`,
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 80}%`,
-            opacity: 0.1 + Math.random() * 0.2,
+            height: p.height,
+            left: p.left,
+            top: p.top,
+            opacity: p.opacity,
             background: 'linear-gradient(to bottom, rgba(129,140,248,0.4), transparent)',
             transform: `rotate(15deg)`,
           }}
@@ -95,6 +96,25 @@ export default function ShareCard({ data, themeId, musicMood }: Props) {
   const now = new Date()
   const dateStr = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })
 
+  const starPositions = useMemo(() =>
+    Array.from({ length: 15 }, () => ({
+      width: 1 + Math.random() * 2,
+      height: 1 + Math.random() * 2,
+      top: `${Math.random() * 60}%`,
+      left: `${Math.random() * 90 + 5}%`,
+      opacity: 0.15 + Math.random() * 0.35,
+    })), []
+  )
+
+  const rainPositions = useMemo(() =>
+    Array.from({ length: 20 }, () => ({
+      height: `${8 + Math.random() * 15}px`,
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 80}%`,
+      opacity: 0.1 + Math.random() * 0.2,
+    })), []
+  )
+
   return (
     <div
       id="weather-share-card"
@@ -113,8 +133,8 @@ export default function ShareCard({ data, themeId, musicMood }: Props) {
       <DecorativeCircle color={theme.decorativeColor} size={200} top="80%" left="10%" blur={80} />
       <DecorativeCircle color={theme.accentColor} size={150} top="40%" left="85%" blur={70} />
 
-      {themeId === 'night-aesthetic' && <DecorativeStars />}
-      {themeId === 'cozy-rain' && <DecorativeRainDrops />}
+      {themeId === 'night-aesthetic' && <DecorativeStars positions={starPositions} />}
+      {themeId === 'cozy-rain' && <DecorativeRainDrops positions={rainPositions} />}
       {themeId === 'cyberpunk-weather' && <DecorativeGrid />}
 
       <div style={{ position: 'relative', zIndex: 1, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>

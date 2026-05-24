@@ -65,7 +65,7 @@ export default function TravelReadiness({
   hourlyRain,
   hourlyCode,
 }: Props) {
-  const [animatedScore, setAnimatedScore] = useState(0)
+  const [animatedScore, setAnimatedScore] = useState<number>(0)
 
   const s = getTravelReadiness(
     temperature, feelsLike, humidity, windSpeed, uvIndex,

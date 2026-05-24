@@ -10,7 +10,7 @@ export default function DailyTrendCard({ highs, lows }: Props) {
   const combined = highs.map((h, i) => ({
     label: h.label,
     high: h.value,
-    low: lows[i]?.value || 0,
+    low: lows[i] !== undefined ? lows[i].value : h.value,
   }))
 
   return (

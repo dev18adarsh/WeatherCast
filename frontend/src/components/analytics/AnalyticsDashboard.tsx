@@ -1,9 +1,10 @@
 import { useMemo } from 'react'
 import {
   Thermometer, Droplets, CloudRain, Wind, Sun, BarChart3,
-  Activity, TrendingUp, ArrowUp, ArrowDown, Clock,
+  Activity, TrendingUp, ArrowUp, ArrowDown,
 } from 'lucide-react'
 import type { WeatherData } from '../../types'
+import { useUnit } from '../../context/UnitContext'
 import {
   computeAnalytics,
   computeDailyTrends,
@@ -28,6 +29,7 @@ interface Props {
 }
 
 export default function AnalyticsDashboard({ data }: Props) {
+  const { formatTemp, formatSpeed } = useUnit()
   const analytics = useMemo(() => computeAnalytics(data.hourly), [data.hourly])
   const dailyTrends = useMemo(() => computeDailyTrends(data.daily), [data.daily])
   const anomalies = useMemo(
@@ -45,8 +47,8 @@ export default function AnalyticsDashboard({ data }: Props) {
   const statCards = [
     {
       label: 'Current',
-      value: `${Math.round(data.current.temperature_2m)}°`,
-      sub: `Feels ${Math.round(data.current.apparent_temperature)}°`,
+      value: formatTemp(data.current.temperature_2m),
+      sub: `Feels ${formatTemp(data.current.apparent_temperature)}`,
       icon: Thermometer,
       color: 'text-orange-400',
       bg: 'bg-orange-500/10',
@@ -63,7 +65,7 @@ export default function AnalyticsDashboard({ data }: Props) {
     },
     {
       label: 'Wind',
-      value: `${Math.round(data.current.wind_speed_10m)} km/h`,
+      value: formatSpeed(data.current.wind_speed_10m),
       sub: data.current.wind_speed_10m > 25 ? 'Windy' : 'Calm',
       icon: Wind,
       color: 'text-purple-400',
@@ -115,13 +117,13 @@ export default function AnalyticsDashboard({ data }: Props) {
               {hottest && (
                 <div className="flex items-center gap-1">
                   <ArrowUp className="w-3 h-3 text-red-400" />
-                  Peak {hottest.label}: {Math.round(hottest.value)}°
+                  Peak {hottest.label}: {formatTemp(hottest.value)}
                 </div>
               )}
               {coldest && (
                 <div className="flex items-center gap-1">
                   <ArrowDown className="w-3 h-3 text-blue-400" />
-                  Low {coldest.label}: {Math.round(coldest.value)}°
+                  Low {coldest.label}: {formatTemp(coldest.value)}
                 </div>
               )}
             </div>
@@ -166,10 +168,10 @@ export default function AnalyticsDashboard({ data }: Props) {
           <AnalyticsCard title="Quick Stats" accent="pink" icon={<TrendingUp className="w-4 h-4" />}>
             <div className="space-y-2.5">
               {[
-                { label: 'High today', value: `${Math.round(data.daily.temperature_2m_max[0])}°`, icon: ArrowUp, color: 'text-orange-400' },
-                { label: 'Low today', value: `${Math.round(data.daily.temperature_2m_min[0])}°`, icon: ArrowDown, color: 'text-blue-400' },
+                { label: 'High today', value: formatTemp(data.daily.temperature_2m_max[0]), icon: ArrowUp, color: 'text-orange-400' },
+                { label: 'Low today', value: formatTemp(data.daily.temperature_2m_min[0]), icon: ArrowDown, color: 'text-blue-400' },
                 { label: 'Rain chance', value: `${data.daily.precipitation_probability_max[0]}%`, icon: CloudRain, color: 'text-cyan-400' },
-                { label: 'Wind max', value: `${data.daily.wind_speed_10m_max[0]} km/h`, icon: Wind, color: 'text-purple-400' },
+                { label: 'Wind max', value: formatSpeed(data.daily.wind_speed_10m_max[0]), icon: Wind, color: 'text-purple-400' },
               ].map((stat) => (
                 <div key={stat.label} className="flex items-center justify-between py-1">
                   <div className="flex items-center gap-2">

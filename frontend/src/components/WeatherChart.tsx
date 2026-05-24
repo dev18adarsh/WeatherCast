@@ -1,5 +1,6 @@
 import { ResponsiveContainer, LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts'
 import { formatTime } from '../utils/weatherCodes'
+import { useUnit } from '../context/UnitContext'
 import type { HourlyForecast } from '../types'
 
 interface Props {
@@ -7,6 +8,7 @@ interface Props {
 }
 
 export default function WeatherChart({ hourly }: Props) {
+  const { formatTemp } = useUnit()
   const data = hourly.time.map((t, i) => ({
     time: formatTime(t),
     temp: hourly.temperature_2m[i],
@@ -28,7 +30,7 @@ export default function WeatherChart({ hourly }: Props) {
             <Tooltip
               contentStyle={{ background: '#0f172a', border: '1px solid #ffffff15', borderRadius: 10, fontSize: 11, boxShadow: '0 8px 32px rgba(0,0,0,0.4)' }}
               labelStyle={{ color: '#94a3b8' }}
-              formatter={(value: number) => [`${Math.round(value)}°C`, null]}
+              formatter={(value: number) => [formatTemp(value), null]}
             />
             <Line type="monotone" dataKey="temp" stroke="#3b82f6" strokeWidth={2.5} dot={false} />
           </LineChart>

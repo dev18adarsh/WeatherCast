@@ -69,7 +69,7 @@ export function getMusicSuggestion(weatherCode: number, temp: number): MusicMood
     }
   }
 
-  if (temp < 15 && weatherCode !== 0) {
+  if (temp < 15 && weatherCode !== 0 && !(night && weatherCode === 0)) {
     return {
       mood: 'Cozy',
       genres: ['Acoustic', 'Soul', 'Soft Indie'],

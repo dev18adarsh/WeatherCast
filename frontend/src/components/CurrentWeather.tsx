@@ -1,7 +1,8 @@
 import { memo, useState, useEffect } from 'react'
 import { Wind, Droplets, Thermometer, Eye, Sunrise, Sunset } from 'lucide-react'
 import type { CurrentWeather } from '../types'
-import { getWeatherCondition, formatTemp, getTempColor, getEmoji } from '../utils/weatherCodes'
+import { getWeatherCondition, getTempColor, getEmoji } from '../utils/weatherCodes'
+import { useUnit } from '../context/UnitContext'
 
 interface Props {
   data: CurrentWeather
@@ -33,6 +34,7 @@ function formatTime(isoString?: string) {
 }
 
 const CurrentWeatherCard = memo(function CurrentWeatherCard({ data, locationName, sunrise, sunset }: Props) {
+  const { formatTemp, formatSpeed } = useUnit()
   const condition = getWeatherCondition(data.weather_code)
   const tempColor = getTempColor(data.temperature_2m)
 
@@ -61,7 +63,6 @@ const CurrentWeatherCard = memo(function CurrentWeatherCard({ data, locationName
               >
                 {formatTemp(data.temperature_2m)}
               </span>
-              <span className="text-2xl text-slate-500 font-light">°C</span>
             </div>
             <p className="text-slate-400">Feels like <span style={{ color: tempColor }}>{formatTemp(data.apparent_temperature)}</span></p>
           </div>
@@ -73,7 +74,7 @@ const CurrentWeatherCard = memo(function CurrentWeatherCard({ data, locationName
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 mt-6 pt-6 border-t border-white/10">
           {[
             { icon: Droplets, label: 'Humidity', value: `${data.relative_humidity_2m}%`, color: '#38bdf8' },
-            { icon: Wind, label: 'Wind', value: `${data.wind_speed_10m} km/h`, color: '#a78bfa' },
+            { icon: Wind, label: 'Wind', value: formatSpeed(data.wind_speed_10m), color: '#a78bfa' },
             { icon: Thermometer, label: 'Feels like', value: formatTemp(data.apparent_temperature), color: tempColor },
             { icon: Eye, label: 'Visibility', value: data.visibility >= 10000 ? 'Excellent' : data.visibility >= 5000 ? 'Good' : 'Low', color: '#34d399' },
             { icon: Sunrise, label: 'Sunrise', value: formatTime(sunrise), color: '#fbbf24' },

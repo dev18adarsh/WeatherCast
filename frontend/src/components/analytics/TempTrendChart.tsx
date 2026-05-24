@@ -13,7 +13,9 @@ export default function TempTrendChart({ data, feelsLikeData }: Props) {
     feelsLike: feelsLikeData[i]?.value,
   }))
 
-  const avg = combined.reduce((a, b) => a + b.temp, 0) / combined.length
+  const avg = combined.length > 0
+    ? combined.reduce((a, b) => a + b.temp, 0) / combined.length
+    : 0
 
   return (
     <div>

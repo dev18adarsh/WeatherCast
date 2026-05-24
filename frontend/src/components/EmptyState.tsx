@@ -35,7 +35,7 @@ export default function EmptyState({ onCityClick }: Props) {
         {POPULAR.map((city) => (
           <button
             key={city.name}
-            onClick={() => onCityClick?.({ id: 0, name: city.name, latitude: city.lat, longitude: city.lng, country: city.country, country_code: '', admin1: '' })}
+            onClick={() => onCityClick?.({ id: city.lat * 10000 + city.lng * 100, name: city.name, latitude: city.lat, longitude: city.lng, country: city.country, country_code: '', admin1: '' })}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.06] text-xs text-slate-400 hover:bg-white/[0.08] hover:text-slate-300 hover:border-white/[0.12] transition-all duration-200 cursor-pointer"
           >
             <MapPin className="w-2.5 h-2.5 text-blue-400/50" />

@@ -77,9 +77,13 @@ function assessUV(uv: number): string {
 
 function getBestTimeToday(hourly: WeatherData['hourly']): { time: string; reason: string } | null {
   const now = new Date().getHours()
-  const remaining = hourly.time
-    .map((t, i) => ({ hour: new Date(t).getHours(), idx: i }))
-    .filter((h) => h.hour >= now && h.hour < now + 8)
+    const remaining = hourly.time
+      .map((t, i) => ({ hour: new Date(t).getHours(), idx: i }))
+      .filter((h) => {
+        const hour = h.hour
+        if (hour >= now) return hour < now + 8
+        return hour + 24 < now + 8
+      })
 
   if (remaining.length === 0) return null
 

@@ -59,6 +59,7 @@ export default function App() {
   const [showAnalytics, setShowAnalytics] = useState(false)
 
   const geoFetched = useRef(false)
+  const currentGeoRef = useRef<GeocodingResult | null>(null)
 
   useEffect(() => {
     if (geo.lat != null && geo.lng != null && !geoFetched.current) {
@@ -73,6 +74,7 @@ export default function App() {
   })
 
   const handleSelect = useCallback((loc: GeocodingResult) => {
+    currentGeoRef.current = loc
     fetchWeather(loc.latitude, loc.longitude, `${loc.name}, ${loc.country}`)
     globeRef.current?.flyTo(loc.latitude, loc.longitude)
   }, [fetchWeather])
@@ -197,21 +199,13 @@ export default function App() {
               />
             </div>
 
-            {showAnalytics && data && (
-              <div className="animate-fade-in-up">
-                <AnalyticsDashboard data={data} />
-              </div>
-            )}
-
-            {!showAnalytics && (
-            <>
             {error && <ErrorAlert message={error} />}
 
             {loading && <LoadingSkeleton />}
 
             {!loading && !error && !data && <EmptyState onCityClick={handleSelect} />}
 
-            {!loading && data && (
+            {!loading && data && !showAnalytics && (
               <>
                 <div className="animate-fade-in-up">
                   <div className="relative">
@@ -222,28 +216,20 @@ export default function App() {
                       sunset={data.daily.sunset[0]}
                     />
                     <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
-                      {data && (
+                      {data && currentGeoRef.current && (
                         <button
                           onClick={() => {
-                            const fakeLoc: GeocodingResult = {
-                              id: data.locationName.charCodeAt(0) * 1000 + Math.round(data.current.temperature_2m),
-                              name: data.locationName.split(',')[0],
-                              latitude: 0,
-                              longitude: 0,
-                              country: data.locationName.split(', ')[1] || '',
-                              country_code: '',
-                            }
-                            handleFavorite(fakeLoc)
+                            handleFavorite(currentGeoRef.current!)
                           }}
                           className={`p-2 rounded-xl transition-all duration-300 ${
-                            false
+                            isFavorite(currentGeoRef.current.id)
                               ? 'text-yellow-400 bg-yellow-500/20'
                               : 'text-slate-400 hover:text-yellow-400 hover:bg-white/10'
                           }`}
-                          title="Add to favorites"
-                          aria-label="Add to favorites"
+                          title={isFavorite(currentGeoRef.current.id) ? 'Remove from favorites' : 'Add to favorites'}
+                          aria-label={isFavorite(currentGeoRef.current.id) ? 'Remove from favorites' : 'Add to favorites'}
                         >
-                          <Star className="w-4 h-4" />
+                          <Star className="w-4 h-4" fill={isFavorite(currentGeoRef.current.id) ? 'currentColor' : 'none'} />
                         </button>
                       )}
                       <ShareButton onClick={() => setShowShare(true)} />
@@ -294,7 +280,11 @@ export default function App() {
                 </div>
               </>
             )}
-            </>
+
+            {!loading && data && showAnalytics && (
+              <div className="animate-fade-in-up">
+                <AnalyticsDashboard data={data} />
+              </div>
             )}
           </main>
 

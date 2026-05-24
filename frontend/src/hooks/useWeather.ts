@@ -11,7 +11,10 @@ export function useWeather() {
     setError(null)
     try {
       const res = await fetch(`/api/weather?lat=${lat}&lng=${lng}`)
-      if (!res.ok) throw new Error('Failed to fetch weather')
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        throw new Error(body.error || `HTTP ${res.status}`)
+      }
       const json: WeatherResponse = await res.json()
       setData({ ...json, locationName })
     } catch (e: any) {

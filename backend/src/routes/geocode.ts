@@ -12,8 +12,9 @@ router.get('/', async (req, res) => {
     const data = await fetchGeocode(q)
     res.json(data)
   } catch (err) {
-    console.error('Geocode error:', err)
-    res.status(502).json({ error: 'Failed to fetch geocoding data' })
+    const message = err instanceof Error ? err.message : 'Failed to fetch geocoding data'
+    console.error('Geocode error:', message)
+    res.status(502).json({ error: message })
   }
 })
 

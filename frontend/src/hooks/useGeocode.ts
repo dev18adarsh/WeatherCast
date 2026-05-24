@@ -17,8 +17,11 @@ export function useGeocode(query: string) {
     setLoading(true)
     setError(null)
     fetch(`/api/geocode?q=${encodeURIComponent(debouncedQuery)}`, { signal: controller.signal })
-      .then((res) => {
-        if (!res.ok) throw new Error('Failed to fetch')
+      .then(async (res) => {
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}))
+          throw new Error(body.error || `HTTP ${res.status}`)
+        }
         return res.json()
       })
       .then((data) => {

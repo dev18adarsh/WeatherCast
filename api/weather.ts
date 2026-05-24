@@ -39,8 +39,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       fetch(`https://air-quality-api.open-meteo.com/v1/air-quality?${aqParams}`)
     ])
 
-    if (!weatherResponse.ok) throw new Error(`Open-Meteo API error: ${weatherResponse.status}`)
-    if (!aqResponse.ok) throw new Error(`Air Quality API error: ${aqResponse.status}`)
+    if (!weatherResponse.ok) {
+      const body = await weatherResponse.json().catch(() => ({}))
+      throw new Error(body.reason || `Open-Meteo API error: ${weatherResponse.status}`)
+    }
+    if (!aqResponse.ok) {
+      const body = await aqResponse.json().catch(() => ({}))
+      throw new Error(body.reason || `Air Quality API error: ${aqResponse.status}`)
+    }
 
     const weatherData = await weatherResponse.json()
     const aqData = await aqResponse.json()
@@ -54,7 +60,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
     })
   } catch (err) {
-    console.error('Weather API error:', err)
-    return res.status(502).json({ error: 'Failed to fetch weather data' })
+    const message = err instanceof Error ? err.message : 'Failed to fetch weather data'
+    console.error('Weather API error:', message)
+    return res.status(502).json({ error: message })
   }
 }

@@ -30,8 +30,14 @@ export async function fetchWeather(lat: number, lng: number) {
     fetch(`https://air-quality-api.open-meteo.com/v1/air-quality?${aqParams}`)
   ])
 
-  if (!weatherRes.ok) throw new Error(`Weather API error: ${weatherRes.status}`)
-  if (!aqRes.ok) throw new Error(`Air Quality API error: ${aqRes.status}`)
+  if (!weatherRes.ok) {
+    const body = await weatherRes.json().catch(() => ({}))
+    throw new Error(body.reason || `Weather API error: ${weatherRes.status}`)
+  }
+  if (!aqRes.ok) {
+    const body = await aqRes.json().catch(() => ({}))
+    throw new Error(body.reason || `Air Quality API error: ${aqRes.status}`)
+  }
 
   const weatherData = await weatherRes.json()
   const aqData = await aqRes.json()

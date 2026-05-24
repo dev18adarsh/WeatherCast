@@ -17,8 +17,9 @@ router.get('/', async (req, res) => {
     const data = await fetchWeather(latNum, lngNum)
     res.json(data)
   } catch (err) {
-    console.error('Weather error:', err)
-    res.status(502).json({ error: 'Failed to fetch weather data' })
+    const message = err instanceof Error ? err.message : 'Failed to fetch weather data'
+    console.error('Weather error:', message)
+    res.status(502).json({ error: message })
   }
 })
 

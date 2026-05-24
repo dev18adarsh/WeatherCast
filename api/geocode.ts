@@ -16,7 +16,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate')
     return res.json(data)
   } catch (err) {
-    console.error('Geocoding API error:', err)
-    return res.status(502).json({ error: 'Failed to fetch geocoding data' })
+    const message = err instanceof Error ? err.message : 'Failed to fetch geocoding data'
+    console.error('Geocoding API error:', message)
+    return res.status(502).json({ error: message })
   }
 }

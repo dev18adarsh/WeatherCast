@@ -438,7 +438,7 @@ function generateGreetingResponse(data: WeatherData | null): string {
   const mood = data ? getWeatherMood(data.current.weather_code, data.current.temperature_2m) : '🌤️'
   const location = data ? ` in **${data.locationName}**` : ''
 
-  let response = `👋 **${greeting}!** Welcome to Kimi's Weather Assistant${location}.\n\n`
+  let response = `👋 **${greeting}!** Welcome to WeatherCast Assistant${location}.\n\n`
   if (data) {
     response += `${mood} — ${getTemperatureFeeling(data.current.temperature_2m)} ${data.locationName ? 'out there' : ''}.\n\n`
     response += `I can help you with:\n`

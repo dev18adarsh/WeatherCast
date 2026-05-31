@@ -87,9 +87,8 @@ export default function WeatherAssistant({ data }: Props) {
     handleSend(q)
   }
 
-  async function handleVoice() {
+    async function handleVoice() {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-      handleSend('voice-input')
       return
     }
 

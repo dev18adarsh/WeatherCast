@@ -158,12 +158,14 @@ export function getWeatherQuote(weatherCode: number, temp: number): { text: stri
 
 export function getMusicMoodLabel(mood: string | null): string {
   const moods: Record<string, string> = {
-    energetic: 'Energetic / EDM',
-    chill: 'Chill / Lo-fi',
-    focused: 'Deep Focus',
-    relaxed: 'Ambient / Relax',
-    happy: 'Happy / Pop',
-    melancholy: 'Melancholy / Indie',
+    'Intense': 'Rock / Dark Synth',
+    'Serene': 'Ambient / Classical',
+    'Chill': 'Lo-fi / R&B / Jazz',
+    'Energetic': 'Summer Pop / EDM',
+    'Cozy': 'Acoustic / Soul',
+    'Dreamy': 'Chillhop / Synthwave',
+    'Happy': 'Pop / Dance',
+    'Laid Back': 'Indie / Chill Pop',
   }
   return mood ? moods[mood] || 'Mixed Vibes' : 'Mixed Vibes'
 }

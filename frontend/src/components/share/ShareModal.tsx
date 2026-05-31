@@ -37,8 +37,8 @@ export default function ShareModal({ data, musicMood, onClose }: Props) {
       link.download = `weather-${data.locationName.split(',')[0]?.trim().toLowerCase() || 'card'}-${themeId}.png`
       link.href = canvas.toDataURL('image/png')
       link.click()
-    } catch {
-      // fallback
+    } catch (err) {
+      console.error('Export failed:', err)
     } finally {
       setExporting(false)
     }
@@ -73,7 +73,8 @@ export default function ShareModal({ data, musicMood, onClose }: Props) {
         text: `Check out the weather in ${data.locationName}!`,
         files: [file],
       })
-    } catch {
+    } catch (err) {
+      console.error('Share failed, falling back to download:', err)
       handleExport()
     } finally {
       setExporting(false)

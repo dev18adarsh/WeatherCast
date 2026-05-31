@@ -1,7 +1,15 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  const { q } = req.query
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS')
+
+  if (req.method === 'OPTIONS') {
+    return res.status(204).end()
+  }
+
+  const qRaw = req.query.q
+  const q = Array.isArray(qRaw) ? qRaw[0] : qRaw
 
   if (!q || typeof q !== 'string') {
     return res.status(400).json({ error: 'Query parameter "q" is required' })

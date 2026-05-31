@@ -4,12 +4,15 @@ import { fetchWeather } from '../services/openMeteo.js'
 const router = Router()
 
 router.get('/', async (req, res) => {
-  const { lat, lng } = req.query
+  const latRaw = req.query.lat
+  const lngRaw = req.query.lng
+  const lat = Array.isArray(latRaw) ? latRaw[0] : latRaw
+  const lng = Array.isArray(lngRaw) ? lngRaw[0] : lngRaw
   if (!lat || !lng) {
     return res.status(400).json({ error: 'Parameters "lat" and "lng" are required' })
   }
-  const latNum = parseFloat(lat as string)
-  const lngNum = parseFloat(lng as string)
+  const latNum = parseFloat(lat)
+  const lngNum = parseFloat(lng)
   if (isNaN(latNum) || isNaN(lngNum)) {
     return res.status(400).json({ error: '"lat" and "lng" must be valid numbers' })
   }

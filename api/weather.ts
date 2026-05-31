@@ -3,14 +3,22 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 const BASE_URL = 'https://api.open-meteo.com/v1'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  const { lat, lng } = req.query
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS')
+
+  if (req.method === 'OPTIONS') {
+    return res.status(204).end()
+  }
+
+  const lat = Array.isArray(req.query.lat) ? req.query.lat[0] : req.query.lat
+  const lng = Array.isArray(req.query.lng) ? req.query.lng[0] : req.query.lng
 
   if (!lat || !lng) {
     return res.status(400).json({ error: 'Parameters "lat" and "lng" are required' })
   }
 
-  const latNum = parseFloat(lat as string)
-  const lngNum = parseFloat(lng as string)
+  const latNum = parseFloat(lat)
+  const lngNum = parseFloat(lng)
 
   if (isNaN(latNum) || isNaN(lngNum)) {
     return res.status(400).json({ error: '"lat" and "lng" must be valid numbers' })

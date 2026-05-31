@@ -264,6 +264,13 @@ export default forwardRef<GlobeHandle, Props>(function WeatherGlobe({ onCitySele
       window.removeEventListener('resize', onResize)
       if (cloudRef.current) {
         scene?.remove(cloudRef.current)
+        cloudRef.current.geometry?.dispose()
+        if (Array.isArray(cloudRef.current.material)) {
+          cloudRef.current.material.forEach((m) => m.dispose())
+        } else {
+          cloudRef.current.material?.dispose()
+        }
+        cloudRef.current = null
       }
       const ctrl = g.controls()
       ctrl.dispose?.()

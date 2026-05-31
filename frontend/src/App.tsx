@@ -23,6 +23,7 @@ import WeatherAssistant from './components/assistant/WeatherAssistant'
 import ShareButton from './components/share/ShareButton'
 import ShareModal from './components/share/ShareModal'
 import AnalyticsDashboard from './components/analytics/AnalyticsDashboard'
+import WeatherAlerts from './components/WeatherAlerts'
 import type { GeocodingResult } from './types'
 import type { GlobeHandle } from './components/WeatherGlobe'
 import type { CityWeather } from './data/worldCities'
@@ -73,11 +74,19 @@ export default function App() {
     input?.focus()
   })
 
+  useKeyboardShortcut('g', () => setShowGlobe((v) => !v))
+
   const handleSelect = useCallback((loc: GeocodingResult) => {
     currentGeoRef.current = loc
     fetchWeather(loc.latitude, loc.longitude, `${loc.name}, ${loc.country}`)
     globeRef.current?.flyTo(loc.latitude, loc.longitude)
   }, [fetchWeather])
+
+  const currentLocation = currentGeoRef.current
+    ? currentGeoRef.current
+    : data
+      ? { id: 0, name: data.locationName, latitude: 0, longitude: 0, country: '', country_code: '', admin1: undefined }
+      : null
 
   const handleGlobeCitySelect = useCallback((city: CityWeather) => {
     fetchWeather(city.lat, city.lng, `${city.name}, ${city.country}`)
@@ -216,25 +225,28 @@ export default function App() {
                       sunset={data.daily.sunset[0]}
                     />
                     <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
-                      {data && currentGeoRef.current && (
+                      {currentLocation && (
                         <button
                           onClick={() => {
-                            handleFavorite(currentGeoRef.current!)
+                            handleFavorite(currentLocation)
                           }}
                           className={`p-2 rounded-xl transition-all duration-300 ${
-                            isFavorite(currentGeoRef.current.id)
+                            isFavorite(currentLocation.id)
                               ? 'text-yellow-400 bg-yellow-500/20'
                               : 'text-slate-400 hover:text-yellow-400 hover:bg-white/10'
                           }`}
-                          title={isFavorite(currentGeoRef.current.id) ? 'Remove from favorites' : 'Add to favorites'}
-                          aria-label={isFavorite(currentGeoRef.current.id) ? 'Remove from favorites' : 'Add to favorites'}
+                          title={isFavorite(currentLocation.id) ? 'Remove from favorites' : 'Add to favorites'}
+                          aria-label={isFavorite(currentLocation.id) ? 'Remove from favorites' : 'Add to favorites'}
                         >
-                          <Star className="w-4 h-4" fill={isFavorite(currentGeoRef.current.id) ? 'currentColor' : 'none'} />
+                          <Star className="w-4 h-4" fill={isFavorite(currentLocation.id) ? 'currentColor' : 'none'} />
                         </button>
                       )}
                       <ShareButton onClick={() => setShowShare(true)} />
                     </div>
                   </div>
+                </div>
+                <div className="animate-fade-in-up" style={{ animationDelay: '0.08s' }}>
+                  <WeatherAlerts data={data} />
                 </div>
                 <div className="animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
                   <MusicSuggestionCard weatherCode={data.current.weather_code} temperature={data.current.temperature_2m} />

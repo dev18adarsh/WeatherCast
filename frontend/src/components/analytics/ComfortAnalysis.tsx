@@ -45,7 +45,7 @@ export default function ComfortAnalysis({ temperature, humidity, anomalies }: Pr
         <div className="space-y-1.5">
           <p className="text-[10px] text-slate-500 uppercase tracking-wider font-medium">Weather Anomalies</p>
           {anomalies.slice(0, 3).map((a, i) => (
-            <div key={i} className={`flex items-start gap-2 p-2 rounded-lg ${severityColors[a.severity]} bg-opacity-10`}>
+            <div key={i} className={`flex items-start gap-2 p-2 rounded-lg ${severityColors[a.severity]}`}>
               <span className="text-sm">{typeIcons[a.type]}</span>
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-medium capitalize">{a.type} — {a.severity}</p>

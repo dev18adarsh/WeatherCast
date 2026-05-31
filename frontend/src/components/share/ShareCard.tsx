@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
-import { getEmoji, getWeatherCondition, formatTemp } from '../../utils/weatherCodes'
+import { getEmoji, getWeatherCondition } from '../../utils/weatherCodes'
 import { getWeatherQuote, getMusicMoodLabel } from '../../utils/weatherQuotes'
+import { useUnit } from '../../context/UnitContext'
 import type { ThemeId, ThemePreset } from '../../utils/themePresets'
 import { getTheme } from '../../utils/themePresets'
 import type { WeatherData } from '../../types'
@@ -85,6 +86,7 @@ function DecorativeRainDrops({ positions }: { positions: Array<{ height: string;
 }
 
 export default function ShareCard({ data, themeId, musicMood }: Props) {
+  const { formatTemp } = useUnit()
   const theme = getTheme(themeId)
   const condition = getWeatherCondition(data.current.weather_code)
   const emoji = getEmoji(data.current.weather_code)

@@ -1,6 +1,7 @@
 import { memo, lazy, Suspense, useState } from 'react'
 import { ChevronDown, ChevronUp, Droplets, Wind } from 'lucide-react'
-import { getDayName, formatTemp, getTempColor, getEmoji } from '../utils/weatherCodes'
+import { getDayName, getTempColor, getEmoji } from '../utils/weatherCodes'
+import { useUnit } from '../context/UnitContext'
 import type { HourlyForecast } from '../types'
 
 const WeatherChart = lazy(() => import('./WeatherChart'))
@@ -22,6 +23,7 @@ const ForecastDay = memo(function ForecastDay({
   precip, precipProb, wind, hourly,
 }: Props) {
   const [expanded, setExpanded] = useState(dayIndex === 0)
+  const { formatTemp, formatSpeed } = useUnit()
   const maxColor = getTempColor(maxTemp)
   const minColor = getTempColor(minTemp)
   const isToday = dayIndex === 0
@@ -60,7 +62,7 @@ const ForecastDay = memo(function ForecastDay({
         </div>
         <div className="hidden sm:flex items-center gap-3 text-xs text-slate-500 shrink-0">
           <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-blue-500/10"><Droplets className="w-3 h-3 text-blue-400" />{precipProb}%</span>
-          <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-purple-500/10"><Wind className="w-3 h-3 text-purple-400" />{wind}</span>
+          <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-purple-500/10"><Wind className="w-3 h-3 text-purple-400" />{formatSpeed(wind)}</span>
         </div>
         <div className="p-1 rounded-full bg-white/5 hover:bg-white/10 transition-colors">
           {expanded ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
